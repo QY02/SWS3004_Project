@@ -1,0 +1,46 @@
+2024-05-29T00:03:17.742+08:00  INFO 5920 --- [restartedMain] org.cs304.backend.BackendApplication     : Starting BackendApplication using Java 17.0.4.1 with PID 5920 (D:\Projects\SE\SUSTech-24Spring-CS304-SE\backend\target\classes started by lenovo in D:\Projects\SE\SUSTech-24Spring-CS304-SE\backend)
+2024-05-29T00:03:17.742+08:00  INFO 5920 --- [restartedMain] org.cs304.backend.BackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2024-05-29T00:03:17.785+08:00  INFO 5920 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-05-29T00:03:17.785+08:00  INFO 5920 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-05-29T00:03:18.741+08:00  INFO 5920 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-05-29T00:03:18.743+08:00  INFO 5920 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-05-29T00:03:18.769+08:00  INFO 5920 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2024-05-29T00:03:19.485+08:00  INFO 5920 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8083 (http)
+2024-05-29T00:03:19.493+08:00  INFO 5920 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-05-29T00:03:19.494+08:00  INFO 5920 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-05-29T00:03:19.547+08:00  INFO 5920 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-05-29T00:03:19.547+08:00  INFO 5920 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1762 ms
+2024-05-29T00:03:19.963+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.Seat".
+2024-05-29T00:03:19.964+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.Seat ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.245+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.EntityAttachmentRelation".
+2024-05-29T00:03:20.246+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.EntityAttachmentRelation ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.265+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserInteraction".
+2024-05-29T00:03:20.265+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserInteraction ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.273+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserFavoriteType".
+2024-05-29T00:03:20.273+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserFavoriteType ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.282+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.History".
+2024-05-29T00:03:20.283+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.History ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.390+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserBlogInteraction".
+2024-05-29T00:03:20.390+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserBlogInteraction ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:20.443+08:00  WARN 5920 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.Favorite".
+2024-05-29T00:03:20.443+08:00  WARN 5920 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.Favorite ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:03:21.487+08:00  INFO 5920 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-05-29T00:03:21.492+08:00  INFO 5920 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2024-05-29T00:03:21.580+08:00  WARN 5920 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2024-05-29T00:03:21.606+08:00  INFO 5920 --- [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-05-29T00:03:21.618+08:00 ERROR 5920 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8083 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8083 or configure this application to listen on another port.
+

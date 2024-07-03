@@ -1,0 +1,46 @@
+2024-05-29T00:05:22.468+08:00  INFO 3212 --- [restartedMain] org.cs304.backend.BackendApplication     : Starting BackendApplication using Java 17.0.4.1 with PID 3212 (D:\Projects\SE\SUSTech-24Spring-CS304-SE\backend\target\classes started by lenovo in D:\Projects\SE\SUSTech-24Spring-CS304-SE\backend)
+2024-05-29T00:05:22.468+08:00  INFO 3212 --- [restartedMain] org.cs304.backend.BackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2024-05-29T00:05:22.502+08:00  INFO 3212 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-05-29T00:05:22.502+08:00  INFO 3212 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-05-29T00:05:23.283+08:00  INFO 3212 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-05-29T00:05:23.285+08:00  INFO 3212 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-05-29T00:05:23.316+08:00  INFO 3212 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2024-05-29T00:05:24.125+08:00  INFO 3212 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25571 (http)
+2024-05-29T00:05:24.133+08:00  INFO 3212 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-05-29T00:05:24.134+08:00  INFO 3212 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-05-29T00:05:24.193+08:00  INFO 3212 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-05-29T00:05:24.194+08:00  INFO 3212 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1692 ms
+2024-05-29T00:05:24.584+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.Seat".
+2024-05-29T00:05:24.584+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.Seat ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:24.823+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.EntityAttachmentRelation".
+2024-05-29T00:05:24.823+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.EntityAttachmentRelation ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:24.843+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserInteraction".
+2024-05-29T00:05:24.843+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserInteraction ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:24.852+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserFavoriteType".
+2024-05-29T00:05:24.852+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserFavoriteType ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:24.861+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.History".
+2024-05-29T00:05:24.861+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.History ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:24.980+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserBlogInteraction".
+2024-05-29T00:05:24.981+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserBlogInteraction ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:25.047+08:00  WARN 3212 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.Favorite".
+2024-05-29T00:05:25.047+08:00  WARN 3212 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.Favorite ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-05-29T00:05:26.283+08:00  INFO 3212 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-05-29T00:05:26.288+08:00  INFO 3212 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2024-05-29T00:05:26.384+08:00  INFO 3212 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25571 (http) with context path ''
+2024-05-29T00:05:26.386+08:00  INFO 3212 --- [restartedMain] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [47.107.113.54:25569]
+2024-05-29T00:05:26.788+08:00  INFO 3212 --- [restartedMain] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#4e9ac063:0/SimpleConnection@a55cee5 [delegate=amqp://user@47.107.113.54:25569/test, localPort=8320]
+2024-05-29T00:05:26.793+08:00  INFO 3212 --- [restartedMain] o.s.amqp.rabbit.core.RabbitAdmin         : Auto-declaring a non-durable, auto-delete, or exclusive Queue (ChatProduceQueue) durable:false, auto-delete:false, exclusive:false. It will be redeclared if the broker stops and is restarted while the connection factory is alive, but all messages will be lost.
+2024-05-29T00:05:26.793+08:00  INFO 3212 --- [restartedMain] o.s.amqp.rabbit.core.RabbitAdmin         : Auto-declaring a non-durable, auto-delete, or exclusive Queue (ChatConsumeQueue) durable:false, auto-delete:false, exclusive:false. It will be redeclared if the broker stops and is restarted while the connection factory is alive, but all messages will be lost.
+2024-05-29T00:05:27.340+08:00  INFO 3212 --- [restartedMain] org.cs304.backend.BackendApplication     : Started BackendApplication in 5.223 seconds (process running for 5.927)
+2024-05-29T00:05:27.350+08:00  INFO 3212 --- [restartedMain] org.cs304.backend.component.ServerInfo   : Server is running at http://localhost:25571
+2024-05-29T00:05:27.350+08:00  INFO 3212 --- [restartedMain] org.cs304.backend.component.ServerInfo   : Swagger is running at http://localhost:25571/swagger-ui/index.html
+2024-05-29T00:05:27.649+08:00  INFO 3212 --- [RMI TCP Connection(3)-10.32.57.193] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-05-29T00:05:27.650+08:00  INFO 3212 --- [RMI TCP Connection(3)-10.32.57.193] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-05-29T00:05:27.651+08:00  INFO 3212 --- [RMI TCP Connection(3)-10.32.57.193] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-05-29T00:05:27.665+08:00  INFO 3212 --- [RMI TCP Connection(2)-10.32.57.193] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-05-29T00:05:28.037+08:00  INFO 3212 --- [RMI TCP Connection(2)-10.32.57.193] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@549c6c2b
+2024-05-29T00:05:28.040+08:00  INFO 3212 --- [RMI TCP Connection(2)-10.32.57.193] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-05-29T00:06:26.240+08:00  INFO 3212 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] o.s.a.r.l.SimpleMessageListenerContainer : Waiting for workers to finish.
+2024-05-29T00:06:26.763+08:00  INFO 3212 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
+2024-05-29T00:06:26.923+08:00  INFO 3212 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-05-29T00:06:27.044+08:00  INFO 3212 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

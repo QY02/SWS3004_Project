@@ -1,0 +1,28 @@
+server:
+  port: 25572
+
+spring:
+  data:
+    redis:
+      host: 47.107.113.54
+      port: 6379
+      password: <input-password>
+      database: 1
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+
+admin-token: <input-token>
+
+backend:
+  host: 47.107.113.54
+  port: 25571
+  api-token: <input-token>
+
+logging:
+  file:
+    name: .data/logs/EventsCenterFileServer.log
+    path: .data/logs
+  level:
+    root: INFO

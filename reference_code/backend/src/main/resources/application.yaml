@@ -1,0 +1,41 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.107.113.54:3306/events_center_pre
+    username: root
+    password: <input-password>
+  data:
+    redis:
+      host: 47.107.113.54
+      port: 6379
+      password: <input-password>
+      database-index-authentication: 0
+      database-index-file: 1
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+  rabbitmq:
+    host: 47.107.113.54
+    port: 25569
+    username: user
+    password: <input-password>
+    virtual-host: test
+
+file-server:
+  host: 47.107.113.54
+  port: 25576
+  admin-token: <input-token>
+
+user-token:
+  file-server: <input-token>
+
+logging:
+  file:
+    name: .data/logs/EventsCenter.log
+    path: .data/logs
+  level:
+    root: INFO
