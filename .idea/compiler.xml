@@ -2,11 +2,14 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="backend" />
+        <module name="loginService" />
+        <module name="registerService" />
         <module name="fileServer" />
       </profile>
     </annotationProcessing>
@@ -15,6 +18,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
       <module name="fileServer" options="-parameters" />
+      <module name="loginService" options="-parameters" />
+      <module name="registerService" options="-parameters" />
     </option>
   </component>
 </project>
