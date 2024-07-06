@@ -7,9 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="registerService" />
+        <module name="eventPublishService" />
         <module name="backend" />
         <module name="loginService" />
-        <module name="registerService" />
         <module name="tokenVerificationService" />
         <module name="fileServer" />
         <module name="eventListService" />
@@ -20,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
       <module name="eventListService" options="-parameters" />
+      <module name="eventPublishService" options="-parameters" />
       <module name="fileServer" options="-parameters" />
       <module name="loginService" options="-parameters" />
       <module name="registerService" options="-parameters" />

@@ -1,4 +1,4 @@
-package org.nus.cloud.eventListService.exception;
+package org.nus.cloud.eventPublishService.exception;
 
 import lombok.Getter;
 import lombok.Setter;

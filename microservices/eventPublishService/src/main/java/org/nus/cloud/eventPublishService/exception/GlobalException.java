@@ -1,7 +1,7 @@
-package org.nus.cloud.eventListService.exception;
+package org.nus.cloud.eventPublishService.exception;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.nus.cloud.eventListService.utils.Result;
+import org.nus.cloud.eventPublishService.utils.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
