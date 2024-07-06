@@ -1,0 +1,17 @@
+server:
+  port: 25562
+
+spring:
+  data:
+    redis:
+      host: 47.107.113.54
+      port: 6379
+      password: me#u6236kuGfsv
+      database: 0
+
+logging:
+  file:
+    name: logs/tokenVerificationService.log
+    path: logs/tokenVerificationService
+  level:
+    root: INFO

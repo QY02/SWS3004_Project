@@ -7,12 +7,6 @@ spring:
     url: jdbc:mysql://localhost:3306/nus_cloud
     username: root
     password: 123456
-  data:
-    redis:
-      host: 47.107.113.54
-      port: 6379
-      password: me#u6236kuGfsv
-      database: 0
 
 logging:
   file:

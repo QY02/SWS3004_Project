@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/microservices/loginService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/registerService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/tokenVerificationService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/reference_code/backend/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/reference_code/fileServer/src/main/java" charset="UTF-8" />
   </component>

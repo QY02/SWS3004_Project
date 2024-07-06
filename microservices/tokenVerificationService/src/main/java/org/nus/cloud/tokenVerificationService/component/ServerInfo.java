@@ -1,4 +1,4 @@
-package org.nus.cloud.registerService.component;
+package org.nus.cloud.tokenVerificationService.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -20,6 +20,6 @@ public class ServerInfo {
     public void printServerInfo() {
         String address = serverProperties.getAddress() != null ? serverProperties.getAddress().getHostAddress() : "localhost";
         int port = serverProperties.getPort() != null ? serverProperties.getPort() : 8080;
-        log.info("RegisterService is running at http://" + address + ":" + port);
+        log.info("TokenVerificationService is running at http://" + address + ":" + port);
     }
 }

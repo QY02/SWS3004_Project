@@ -33,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = new User(null, routingHash, name, password, email);
         try {
             baseMapper.insert(user);
-            return String.format("%s%d", routingHash, user.getId());
+            return routingHash + user.getId();
         } catch (DuplicateKeyException e) {
             throw new ServiceException("400", "This email has already been registered");
         }

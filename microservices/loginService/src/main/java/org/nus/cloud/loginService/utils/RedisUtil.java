@@ -43,9 +43,9 @@ public class RedisUtil {
 
     public User generateToken(User user) {
         String token = (UUID.randomUUID().toString() + UUID.randomUUID()).replaceAll("-", "");
-        String dbToken = stringRedisTemplate.opsForValue().get(String.valueOf(user.getId()));
+        String dbToken = stringRedisTemplate.opsForValue().get(user.getRoutingHash() + user.getId());
         if (dbToken != null) {
-            stringRedisTemplate.delete(String.valueOf(user.getId()));
+            stringRedisTemplate.delete(user.getRoutingHash() + user.getId());
             stringRedisTemplate.delete(dbToken);
         }
         while (true) {
@@ -55,7 +55,7 @@ public class RedisUtil {
                 token = (UUID.randomUUID().toString() + UUID.randomUUID()).replaceAll("-", "");
             }
         }
-        add(String.valueOf(user.getId()), token);
+        add(user.getRoutingHash() + user.getId(), token);
         user.setPassword(token);
         return user;
     }
