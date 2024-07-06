@@ -12,12 +12,14 @@
         <module name="registerService" />
         <module name="tokenVerificationService" />
         <module name="fileServer" />
+        <module name="eventListService" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
+      <module name="eventListService" options="-parameters" />
       <module name="fileServer" options="-parameters" />
       <module name="loginService" options="-parameters" />
       <module name="registerService" options="-parameters" />

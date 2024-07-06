@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/microservices/loginService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/registerService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/tokenVerificationService/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/eventListService/pom.xml" />
       </list>
     </option>
   </component>
