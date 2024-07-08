@@ -8,5 +8,5 @@ import org.nus.cloud.eventGlobalDataService.entity.SeatMapTemplate;
 public interface ISeatMapTemplateService extends IService<SeatMapTemplate> {
     JSONArray getAllSeatMapTemplateName();
 
-    SeatMapTemplate getSeatMapTemplateById(JSONObject requestData);
+    JSONObject getSeatMapTemplateById(JSONObject requestData);
 }

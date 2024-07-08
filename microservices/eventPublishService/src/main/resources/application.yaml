@@ -8,6 +8,10 @@ spring:
     username: root
     password: 123456
 
+event-global-data-service:
+  host: localhost
+  port: 25563
+
 logging:
   file:
     name: logs/eventPublishService.log

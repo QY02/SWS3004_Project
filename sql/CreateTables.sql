@@ -65,6 +65,15 @@ create table if not exists seat
     price        int
 );
 
+create table if not exists seat_template
+(
+    seat_map_id int         not null,
+    seat_id     varchar(10) not null,
+    unique (seat_map_id, seat_id),
+    type        varchar(10) not null,
+    price       int
+);
+
 create table if not exists order_record
 (
     id                     int primary key auto_increment,

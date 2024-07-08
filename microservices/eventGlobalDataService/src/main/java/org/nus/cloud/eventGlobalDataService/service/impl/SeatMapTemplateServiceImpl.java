@@ -4,11 +4,14 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.nus.cloud.eventGlobalDataService.entity.SeatMapTemplate;
 import org.nus.cloud.eventGlobalDataService.entity.SeatMapTemplateInfo;
+import org.nus.cloud.eventGlobalDataService.entity.SeatTemplate;
 import org.nus.cloud.eventGlobalDataService.exception.ServiceException;
 import org.nus.cloud.eventGlobalDataService.mapper.SeatMapTemplateMapper;
+import org.nus.cloud.eventGlobalDataService.mapper.SeatTemplateMapper;
 import org.nus.cloud.eventGlobalDataService.service.ISeatMapTemplateService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class SeatMapTemplateServiceImpl extends ServiceImpl<SeatMapTemplateMapper, SeatMapTemplate> implements ISeatMapTemplateService {
+
+    @Resource
+    private SeatTemplateMapper seatTemplateMapper;
 
     @Override
     public JSONArray getAllSeatMapTemplateName() {
@@ -92,11 +98,18 @@ public class SeatMapTemplateServiceImpl extends ServiceImpl<SeatMapTemplateMappe
     }
 
     @Override
-    public SeatMapTemplate getSeatMapTemplateById(JSONObject requestData) {
+    public JSONObject getSeatMapTemplateById(JSONObject requestData) {
         Integer id = requestData.getInteger("id");
         if (id == null) {
             throw new ServiceException("400", "Invalid request data");
         }
-        return baseMapper.selectById(id);
+        SeatMapTemplate seatMapTemplate = baseMapper.selectById(id);
+        if (seatMapTemplate == null) {
+            throw new ServiceException("400", "The seat map template does not exist");
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("seatMapTemplate", seatMapTemplate);
+        jsonObject.put("seatTemplateArray", seatTemplateMapper.selectList(new QueryWrapper<SeatTemplate>().eq("seat_map_id", id)));
+        return jsonObject;
     }
 }

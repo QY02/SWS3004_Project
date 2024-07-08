@@ -21,12 +21,12 @@ public class BriefEventController {
     @Resource
     private IBriefEventService briefEventService;
 
-    @PostMapping("/getBriefEventList")
+    @PostMapping("/getList")
     public Result getBriefEventList(@NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
         return Result.success(response, briefEventService.getBriefEventList(requestData));
     }
 
-    @PostMapping("/addBriefEvent")
+    @PostMapping("/add")
     public Result addBriefEvent(@NotNull HttpServletResponse response, @RequestBody BriefEvent briefEvent) {
         briefEventService.save(briefEvent);
         return Result.success(response);
