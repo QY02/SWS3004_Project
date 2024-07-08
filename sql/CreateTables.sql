@@ -15,9 +15,18 @@ create table if not exists event
 (
     id                int primary key auto_increment,
     publisher_full_id varchar(20),
-    publish_datetime      datetime      not null,
+    publish_datetime  datetime      not null,
     name              varchar(1024) not null,
     content           text
+);
+
+create table if not exists brief_event
+(
+    id                     int,
+    publisher_full_id      varchar(20),
+    publish_datetime       datetime,
+    name                   varchar(1024),
+    detailed_data_location int
 );
 
 create table if not exists event_session
@@ -30,6 +39,13 @@ create table if not exists event_session
     end_time                datetime,
     seat_map_id             int,
     venue                   varchar(1024) not null
+);
+
+create table if not exists seat_map_template
+(
+    id   int primary key auto_increment,
+    name varchar(128),
+    data varchar(5120)
 );
 
 create table if not exists seat_map

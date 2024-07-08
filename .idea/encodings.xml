@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/microservices/eventListService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/eventGlobalDataService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/eventPublishService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/loginService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/registerService/src/main/java" charset="UTF-8" />
