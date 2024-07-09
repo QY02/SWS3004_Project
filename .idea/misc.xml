@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/microservices/eventPublishService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/eventGlobalDataService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/eventDetailedDataService/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/orderRecordService/pom.xml" />
       </list>
     </option>
   </component>

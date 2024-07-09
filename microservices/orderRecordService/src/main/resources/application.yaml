@@ -1,0 +1,16 @@
+server:
+  port: 25566
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nus_cloud
+    username: root
+    password: 123456
+
+logging:
+  file:
+    name: logs/orderRecordService.log
+    path: logs/orderRecordService
+  level:
+    root: INFO
