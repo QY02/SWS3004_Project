@@ -1,4 +1,4 @@
-package org.nus.cloud.orderRecordService.entity;
+package org.nus.cloud.bookingService.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,22 +11,22 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderRecord {
+public class EventSession {
 
     @TableId(type = IdType.AUTO)
-    private Integer id;
-
-    private String fullUserId;
+    private Integer eventSessionId;
 
     private Integer eventId;
 
-    private Integer eventSessionId;
+    private LocalDateTime registrationStartTime;
 
-    private String seatId;
+    private LocalDateTime registrationEndTime;
 
-    private String additionalInformation;
+    private LocalDateTime startTime;
 
-    private Integer price;
+    private LocalDateTime endTime;
 
-    private LocalDateTime submitTime;
+    private Integer seatMapId;
+
+    private String venue;
 }

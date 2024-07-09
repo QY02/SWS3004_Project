@@ -77,9 +77,10 @@ create table if not exists seat_template
 create table if not exists order_record
 (
     id                     int primary key auto_increment,
-    user_full_id           varchar(20) not null,
+    full_user_id varchar(20) not null,
     event_id               int         not null,
     event_session_id       int         not null,
+    unique (full_user_id, event_id, event_session_id),
     seat_id                varchar(10),
     additional_information varchar(10240),
     price                  int,

@@ -1,4 +1,4 @@
-package org.nus.cloud.orderRecordService.entity;
+package org.nus.cloud.bookingService.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

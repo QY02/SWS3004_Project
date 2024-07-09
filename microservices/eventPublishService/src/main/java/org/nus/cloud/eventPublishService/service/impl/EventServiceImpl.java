@@ -109,11 +109,11 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
                 requestBody.put("id", seatMapTemplateId);
                 try {
                     HttpEntity<JSONObject> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-                    ResponseEntity<JSONObject> responseFromBackend = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/seatMapTemplate/getSeatMapTemplateById", HttpMethod.POST, httpEntity, JSONObject.class);
-                    if (responseFromBackend.getStatusCode().value() != 200) {
+                    ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/seatMapTemplate/getSeatMapTemplateById", HttpMethod.POST, httpEntity, JSONObject.class);
+                    if (responseFromService.getStatusCode().value() != 200) {
                         throw new ServiceException("500", "An error occurred when requesting seat map template from event global data service");
                     }
-                    JSONObject seatMapTemplateWithSeats = Objects.requireNonNull(responseFromBackend.getBody()).getJSONObject("data");
+                    JSONObject seatMapTemplateWithSeats = Objects.requireNonNull(responseFromService.getBody()).getJSONObject("data");
                     seatMapTemplate = seatMapTemplateWithSeats.getObject("seatMapTemplate", SeatMapTemplate.class);
                     seatTemplateList = seatMapTemplateWithSeats.getList("seatTemplateArray", SeatTemplate.class);
                     seatMapTemplateMapper.insert(seatMapTemplate);
@@ -146,8 +146,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         requestBody.put("detailedDataLocation", 0);
         try {
             HttpEntity<JSONObject> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-            ResponseEntity<JSONObject> responseFromBackend = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/briefEvent/add", HttpMethod.POST, httpEntity, JSONObject.class);
-            if (responseFromBackend.getStatusCode().value() != 200) {
+            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/briefEvent/add", HttpMethod.POST, httpEntity, JSONObject.class);
+            if (responseFromService.getStatusCode().value() != 200) {
                 throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
             }
         } catch (RestClientException e) {

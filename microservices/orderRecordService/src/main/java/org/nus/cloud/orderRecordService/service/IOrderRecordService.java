@@ -7,5 +7,8 @@ import org.nus.cloud.orderRecordService.entity.OrderRecord;
 import java.util.List;
 
 public interface IOrderRecordService extends IService<OrderRecord> {
+
     List<OrderRecord> get(JSONObject requestData);
+
+    OrderRecord add(OrderRecord orderRecord);
 }

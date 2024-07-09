@@ -26,7 +26,6 @@ public class OrderRecordController {
 
     @PostMapping("/add")
     public Result add(@NotNull HttpServletResponse response, @RequestBody OrderRecord orderRecord) {
-        orderRecordService.save(orderRecord);
-        return Result.success(response);
+        return Result.success(response, orderRecordService.add(orderRecord));
     }
 }

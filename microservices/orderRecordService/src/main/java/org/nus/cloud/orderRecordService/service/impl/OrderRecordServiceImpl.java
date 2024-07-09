@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.nus.cloud.orderRecordService.entity.OrderRecord;
+import org.nus.cloud.orderRecordService.exception.ServiceException;
 import org.nus.cloud.orderRecordService.mapper.OrderRecordMapper;
 import org.nus.cloud.orderRecordService.service.IOrderRecordService;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,5 +54,16 @@ public class OrderRecordServiceImpl extends ServiceImpl<OrderRecordMapper, Order
             queryWrapper.lt("submit_time", searchTimeEnd);
         }
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public OrderRecord add(OrderRecord orderRecord) {
+        orderRecord.setSubmitTime(LocalDateTime.now());
+        try {
+            baseMapper.insert(orderRecord);
+        } catch (DuplicateKeyException e) {
+            throw new ServiceException("400", "You have already booked the session");
+        }
+        return orderRecord;
     }
 }

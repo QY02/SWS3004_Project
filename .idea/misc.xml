@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/microservices/eventGlobalDataService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/eventDetailedDataService/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/orderRecordService/pom.xml" />
+        <option value="$PROJECT_DIR$/microservices/bookingService/pom.xml" />
       </list>
     </option>
   </component>

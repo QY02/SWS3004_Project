@@ -14,6 +14,7 @@
         <module name="backend" />
         <module name="loginService" />
         <module name="tokenVerificationService" />
+        <module name="bookingService" />
         <module name="orderRecordService" />
         <module name="fileServer" />
       </profile>
@@ -22,6 +23,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
+      <module name="bookingService" options="-parameters" />
       <module name="eventDetailedDataService" options="-parameters" />
       <module name="eventGlobalDataService" options="-parameters" />
       <module name="eventPublishService" options="-parameters" />
