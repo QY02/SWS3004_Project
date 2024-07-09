@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="registerService" />
+        <module name="eventDetailedDataService" />
         <module name="eventPublishService" />
         <module name="eventGlobalDataService" />
         <module name="backend" />
@@ -20,6 +21,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
+      <module name="eventDetailedDataService" options="-parameters" />
       <module name="eventGlobalDataService" options="-parameters" />
       <module name="eventPublishService" options="-parameters" />
       <module name="fileServer" options="-parameters" />
