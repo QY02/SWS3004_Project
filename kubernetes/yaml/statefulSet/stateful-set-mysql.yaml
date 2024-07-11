@@ -1,0 +1,5 @@
+apiVersion: app/v1
+kind: StatefulSet
+metadata:
+  name: mysql-statefulset
+spec:
