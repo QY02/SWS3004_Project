@@ -1,17 +1,34 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: ebs-stateful-set-mysql
+#  namespace: nus-cloud-project  # 注意这里是 namespace
 spec:
   selector:
     matchLabels:
-      app: ebs-app-mysql
-  serviceName: ebs-server-mysql
+      database: mysql-user
+  serviceName: headless-service-mysql-user
   replicas: 3
   template:
     metadata:
-      label:
-        apps: ebs-app-mysql
+      labels:  # 注意这里是 labels
+        database: mysql-user
     spec:
       containers:
-        - name:
+        - name: ebs-containers-mysql
+          image: dockerdocker520/sql-test
+          volumeMounts:
+            - name: ebs-storage-mysql
+              mountPath: /var/lib/mysql
+              subPath: mysql  # 如果不清楚 subPath 的用途，可以删除这一行
+#            - name: conf-mysql
+#              mountPath: /etc/mysql/conf.d
+  volumeClaimTemplates:
+    - metadata:
+        name: ebs-storage-mysql
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "ebs-sc"
+        resources:
+          requests:
+            storage: 1Gi
