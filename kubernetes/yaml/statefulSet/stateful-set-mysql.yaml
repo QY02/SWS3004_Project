@@ -1,5 +1,17 @@
 apiVersion: app/v1
 kind: StatefulSet
 metadata:
-  name: mysql-statefulset
+  name: ebs-stateful-set-mysql
 spec:
+  selector:
+    matchLabels:
+      app: ebs-app-mysql
+  serviceName: ebs-server-mysql
+  replicas: 3
+  template:
+    metadata:
+      label:
+        apps: ebs-app-mysql
+    spec:
+      containers:
+        - name:
