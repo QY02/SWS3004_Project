@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ebs-stateful-set-mysql
+  name: stateful-set-mysql
 #  namespace: nus-cloud-project  # 注意这里是 namespace
 spec:
   selector:

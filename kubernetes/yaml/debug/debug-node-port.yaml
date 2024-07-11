@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nus-cloud-project
+  name: debug-node-port
+spec:
+  selector:
+    statefulset.kubernetes.io/pod-name: stateful-set-register-0
+  ports:
+    - protocol: TCP
+      port: 25561
+      nodePort: 30060
+  type: NodePort
+  
