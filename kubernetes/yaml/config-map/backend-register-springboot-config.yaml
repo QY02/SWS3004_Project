@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: backend-register-springboot-config
+data:
+  application.yaml: |
+    server:
+      port: 25561
+    
+    spring:
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+        username: ${MYSQL_USERNAME}
+        password: ${MYSQL_PASSWORD}
+    
+    logging:
+      file:
+        name: logs/registerService.log
+        path: logs/registerService
+      level:
+        root: INFO
+  SPRING_CONFIG_LOCATION: "file:/config/application.yaml"

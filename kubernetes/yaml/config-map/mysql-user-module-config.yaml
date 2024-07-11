@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: mysql-user-config
+data:
+  MYSQL_HOST_PREFIX: "mysql-user-"
+  MYSQL_HOST_POSTFIX: ".headless-service-mysql-user.nus-cloud-project.svc.cluster.local"
+  MYSQL_PORT: "3306"
