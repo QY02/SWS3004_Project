@@ -22,6 +22,11 @@ spec:
               mountPath: /var/lib/mysql
               subPath: mysql  # 如果不清楚 subPath 的用途，可以删除这一行
           env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_DATABASE
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
