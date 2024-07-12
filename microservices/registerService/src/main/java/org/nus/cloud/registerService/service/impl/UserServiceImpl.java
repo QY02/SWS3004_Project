@@ -2,6 +2,7 @@ package org.nus.cloud.registerService.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.nus.cloud.registerService.entity.User;
 import org.nus.cloud.registerService.exception.ServiceException;
@@ -15,7 +16,15 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Override
-    public String register(JSONObject requestData) {
+    public String register(HttpServletRequest request, JSONObject requestData) {
+        String email = request.getHeader("email");
+        if (email == null) {
+            throw new ServiceException("400", "Invalid email");
+        }
+        String routingHash = request.getHeader("routingHash");
+        if (routingHash == null) {
+            throw new ServiceException("500", "Invalid routingHash");
+        }
         String name = requestData.getString("name");
         if (name == null) {
             throw new ServiceException("400", "Invalid name");
@@ -24,11 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (password == null) {
             throw new ServiceException("400", "Invalid password");
         }
-        String email = requestData.getString("email");
-        if (email == null) {
-            throw new ServiceException("400", "Invalid email");
-        }
-        String routingHash = String.format("%08d", Math.abs(email.hashCode()) % 100000000);
 
         User user = new User(null, routingHash, name, password, email);
         try {
