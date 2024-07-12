@@ -3,15 +3,18 @@ package org.nus.cloud.userRoutingHashGenerateService.controller;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.nus.cloud.userRoutingHashGenerateService.config.RoutingRulesConfig;
 import org.nus.cloud.userRoutingHashGenerateService.entity.Rule;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -62,6 +65,16 @@ public class UserRoutingHashGenerateController {
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new ResponseErrorHandler() {
+            @Override
+            public boolean hasError(@NotNull ClientHttpResponse response) {
+                return false;
+            }
+
+            @Override
+            public void handleError(@NotNull ClientHttpResponse response) {
+            }
+        });
         restTemplate.setUriTemplateHandler(factory);
         RequestCallback requestCallback = restTemplate.httpEntityCallback(httpEntity, byte[].class);
         ResponseExtractor<ResponseEntity<byte[]>> responseExtractor = restTemplate.responseEntityExtractor(byte[].class);
