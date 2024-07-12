@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: nus-cloud-project
-  name: user-routing-hash-generate-springboot-config
+  name: backend-user-routing-hash-generate-springboot-config
 data:
   application.yaml: |
     server:

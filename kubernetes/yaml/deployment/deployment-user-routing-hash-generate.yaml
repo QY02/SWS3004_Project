@@ -25,7 +25,7 @@ spec:
             - name: SPRING_CONFIG_LOCATION
               valueFrom:
                 configMapKeyRef:
-                  name: backend-register-springboot-config
+                  name: backend-user-routing-hash-generate-springboot-config
                   key: SPRING_CONFIG_LOCATION
           volumeMounts:
             - name: config-volume
@@ -33,7 +33,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: user-routing-hash-generate-springboot-config
+            name: backend-user-routing-hash-generate-springboot-config
             items:
               - key: application.yaml
                 path: application.yaml

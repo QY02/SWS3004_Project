@@ -2,7 +2,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   namespace: nus-cloud-project
-  name: http-route-routing-hash-generate
+  name: http-route-user-routing-hash-generate
 spec:
   parentRefs:
     - name: gateway-events-center
@@ -12,5 +12,5 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: cluster-ip-service-routing-hash-generate
+        - name: cluster-ip-service-user-routing-hash-generate
           port: 25558
