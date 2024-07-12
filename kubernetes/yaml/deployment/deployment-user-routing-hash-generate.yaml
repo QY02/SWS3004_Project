@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nus-cloud-project
+  name: deployment-user-routing-hash-generate
+  labels:
+    backend: user-routing-hash-generate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      backend: user-routing-hash-generate
+  template:
+    metadata:
+      labels:
+        backend: user-routing-hash-generate
+    spec:
+      containers:
+        - name: events-center-backend-user-routing-hash-generate
+          image: qy02/events-center-backend-user-routing-hash-generate
+          ports:
+            - containerPort: 25558
+              name: http
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-register-springboot-config
+                  key: SPRING_CONFIG_LOCATION
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: user-routing-hash-generate-springboot-config
+            items:
+              - key: application.yaml
+                path: application.yaml

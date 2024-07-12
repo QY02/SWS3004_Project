@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: user-routing-hash-generate-springboot-config
+data:
+  application.yaml: |
+    server:
+      port: 25558
+    
+    routing-rules:
+      - startHash: 0
+        endHash: 33333333
+        index: 0
+      - startHash: 33333333
+        endHash: 66666666
+        index: 1
+      - startHash: 66666666
+        endHash: 100000000
+        index: 2
+    
+    logging:
+      file:
+        name: logs/userRoutingHashGenerateService.log
+        path: logs/userRoutingHashGenerateService
+      level:
+        root: INFO
+  SPRING_CONFIG_LOCATION: "file:/config/application.yaml"

@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  namespace: nus-cloud-project
+  name: http-route-user
+spec:
+  parentRefs:
+    - group: ""
+      kind: Service
+      name: cluster-ip-service-user
+      port: 25559
+  rules:
+    - backendRefs:
+        - name: cluster-ip-service-register-0
+          port: 25561

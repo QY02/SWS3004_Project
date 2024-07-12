@@ -1,0 +1,20 @@
+server:
+  port: 25558
+
+routing-rules:
+  - startHash: 0
+    endHash: 33333333
+    index: 0
+  - startHash: 33333333
+    endHash: 66666666
+    index: 1
+  - startHash: 66666666
+    endHash: 100000000
+    index: 2
+
+logging:
+  file:
+    name: logs/userRoutingHashGenerateService.log
+    path: logs/userRoutingHashGenerateService
+  level:
+    root: INFO
