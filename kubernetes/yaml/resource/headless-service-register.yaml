@@ -9,3 +9,4 @@ spec:
     backend: register
   ports:
     - port: 25660
+      targetPort: 25561

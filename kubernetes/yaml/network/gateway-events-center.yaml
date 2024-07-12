@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  namespace: nus-cloud-project
+  name: gateway-events-center
+spec:
+  gatewayClassName: istio
+  listeners:
+    - name: http
+      port: 25670
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same

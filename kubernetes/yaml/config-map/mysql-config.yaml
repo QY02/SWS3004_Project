@@ -4,4 +4,4 @@ metadata:
   namespace: nus-cloud-project
   name: mysql-config
 data:
-  MYSQL_DATABASE: "nus-cloud-project"
+  MYSQL_DATABASE: "nus_cloud_project"

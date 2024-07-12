@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nus-cloud-project
+  name: load-balancer-events-center
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 25680
+      targetPort: 25670
+  selector:
+    gateway: events-center
