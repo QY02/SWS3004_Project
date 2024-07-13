@@ -7,3 +7,6 @@ data:
   redis.conf: |
     appendonly yes
     dir /data
+  REDIS_HOST_PREFIX: "stateful-set-redis-"  # for saving user data. another one is for events
+  REDIS_HOST_POSTFIX: ".headless-service-redis.nus-cloud-project.svc.cluster.local"
+  REDIS_PORT: "6379"
