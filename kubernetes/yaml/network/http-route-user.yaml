@@ -35,17 +35,6 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /register
-          headers:
-            - type: Exact
-              name: routingIndex
-              value: "2"
-      backendRefs:
-        - name: cluster-ip-service-register-2
-          port: 25561
-    - matches:
-        - path:
-            type: PathPrefix
             value: /login
           headers:
             - type: Exact
@@ -53,7 +42,7 @@ spec:
               value: "0"
       backendRefs:
         - name: cluster-ip-service-login-0
-          port: 25561
+          port: 25560
     - matches:
         - path:
             type: PathPrefix
@@ -64,18 +53,7 @@ spec:
               value: "1"
       backendRefs:
         - name: cluster-ip-service-login-1
-          port: 25561
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /login
-          headers:
-            - type: Exact
-              name: routingIndex
-              value: "2"
-      backendRefs:
-        - name: cluster-ip-service-login-2
-          port: 25561
+          port: 25560
     - matches:
         - path:
             type: PathPrefix
@@ -86,7 +64,7 @@ spec:
               value: "0"
       backendRefs:
         - name: cluster-ip-service-token-verification-0
-          port: 25561
+          port: 25562
     - matches:
         - path:
             type: PathPrefix
@@ -97,15 +75,4 @@ spec:
               value: "1"
       backendRefs:
         - name: cluster-ip-service-token-verification-1
-          port: 25561
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /tokenVerification
-          headers:
-            - type: Exact
-              name: routingIndex
-              value: "2"
-      backendRefs:
-        - name: cluster-ip-service-token-verification-2
-          port: 25561
+          port: 25562

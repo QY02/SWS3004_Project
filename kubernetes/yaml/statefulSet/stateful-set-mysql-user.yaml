@@ -8,7 +8,7 @@ spec:
     matchLabels:
       database: mysql-user
   serviceName: headless-service-mysql-user
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:  # 注意这里是 labels

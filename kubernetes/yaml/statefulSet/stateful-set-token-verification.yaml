@@ -8,7 +8,7 @@ spec:
     matchLabels:
       backend: token-verification
   serviceName: cluster-ip-service-token-verification
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
