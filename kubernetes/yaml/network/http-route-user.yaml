@@ -16,7 +16,7 @@ spec:
             value: /register
           headers:
             - type: Exact
-              name: index
+              name: routingIndex
               value: "0"
       backendRefs:
         - name: cluster-ip-service-register-0
@@ -27,7 +27,7 @@ spec:
             value: /register
           headers:
             - type: Exact
-              name: index
+              name: routingIndex
               value: "1"
       backendRefs:
         - name: cluster-ip-service-register-1
@@ -38,7 +38,7 @@ spec:
             value: /register
           headers:
             - type: Exact
-              name: index
+              name: routingIndex
               value: "2"
       backendRefs:
         - name: cluster-ip-service-register-2

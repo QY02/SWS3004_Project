@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "routing-rules")
+@ConfigurationProperties(prefix = "")
 public class RoutingRulesConfig {
-    private List<Rule> ruleList;
+    private List<Rule> routingRuleList;
 }

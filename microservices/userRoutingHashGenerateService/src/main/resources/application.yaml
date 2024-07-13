@@ -1,7 +1,7 @@
 server:
   port: 25558
 
-routing-rules:
+routingRuleList:
   - startHash: 0
     endHash: 33333333
     index: 0

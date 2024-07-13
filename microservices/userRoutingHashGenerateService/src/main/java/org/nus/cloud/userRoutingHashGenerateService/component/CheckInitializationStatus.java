@@ -22,7 +22,7 @@ public class CheckInitializationStatus {
 
     @EventListener(ApplicationReadyEvent.class)
     public void checkInitializationStatus() {
-        if (applicationContext.getEnvironment().containsProperty("routing-rules[0].startHash")) {
+        if (applicationContext.getEnvironment().containsProperty("routingRuleList[0].startHash")) {
             String address = serverProperties.getAddress() != null ? serverProperties.getAddress().getHostAddress() : "localhost";
             int port = serverProperties.getPort() != null ? serverProperties.getPort() : 8080;
             log.info("UserRoutingHashGenerateService is running at http://" + address + ":" + port);

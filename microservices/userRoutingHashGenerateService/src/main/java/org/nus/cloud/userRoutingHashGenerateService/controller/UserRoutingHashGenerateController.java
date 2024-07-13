@@ -51,7 +51,7 @@ public class UserRoutingHashGenerateController {
                 String email = request.getHeader(headerName);
                 int emailHash = Math.abs(email.hashCode()) % 100000000;
                 headers.add("routingHash", String.format("%08d", emailHash));
-                List<Rule> routingRuleList = routingRulesConfig.getRuleList();
+                List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
                 for (Rule rule : routingRuleList) {
                     if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
                         headers.add("routingIndex", String.valueOf(rule.getIndex()));
