@@ -57,7 +57,7 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /tokenVerification
+            value: /
           headers:
             - type: Exact
               name: routingIndex
@@ -68,7 +68,7 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /tokenVerification
+            value: /
           headers:
             - type: Exact
               name: routingIndex

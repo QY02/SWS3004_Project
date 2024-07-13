@@ -4,6 +4,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.nus.cloud.tokenVerificationService.exception.ServiceException;
 import org.nus.cloud.tokenVerificationService.utils.RedisUtil;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RequestCallback;
@@ -33,7 +36,7 @@ public class TokenVerificationController {
     @Resource
     private RedisUtil redisUtil;
 
-    @PostMapping("/tokenVerification")
+    @PostMapping("/**")
     public Object tokenVerification(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         String token = request.getHeader("token");
         if ((token == null) || (token.isBlank())) {
@@ -54,7 +57,11 @@ public class TokenVerificationController {
             return Result.error(response, "401", "Verification failed");
         }
         else {
-            return forwardRequest(request);
+            if (request.getRequestURI().equals("/tokenVerification")) {
+                return Result.success(response);
+            } else {
+                return forwardRequest(request);
+            }
         }
     }
 
@@ -81,7 +88,7 @@ public class TokenVerificationController {
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = getRestTemplateWithoutRetry();
         restTemplate.setErrorHandler(new ResponseErrorHandler() {
             @Override
             public boolean hasError(@NotNull ClientHttpResponse response) {
@@ -108,5 +115,13 @@ public class TokenVerificationController {
         });
         responseEntity = ResponseEntity.status(responseEntity.getStatusCode()).headers(responseHeaders).body(responseEntity.getBody());
         return responseEntity;
+    }
+
+    public RestTemplate getRestTemplateWithoutRetry() {
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        httpClientBuilder.disableAutomaticRetries();
+        CloseableHttpClient httpClient = httpClientBuilder.build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        return new RestTemplate(requestFactory);
     }
 }
