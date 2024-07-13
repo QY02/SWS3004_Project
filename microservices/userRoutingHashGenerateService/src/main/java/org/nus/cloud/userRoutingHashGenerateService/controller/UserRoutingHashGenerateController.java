@@ -47,15 +47,28 @@ public class UserRoutingHashGenerateController {
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             headers.add(headerName, request.getHeader(headerName));
-            if (headerName.equalsIgnoreCase("email")) {
+            if (headerName.equalsIgnoreCase("fullUserId")) {
+                String routingHash = request.getHeader(headerName).substring(0, 8);
+                int routingHashInt = Integer.parseInt(routingHash);
+                headers.add("routingHash", routingHash);
+                List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
+                for (Rule rule : routingRuleList) {
+                    if (routingHashInt >= rule.getStartHash() && (routingHashInt < rule.getEndHash())) {
+                        headers.add("routingIndex", String.valueOf(rule.getIndex()));
+                        break;
+                    }
+                }
+            } else if (headerName.equalsIgnoreCase("email")) {
                 String email = request.getHeader(headerName);
                 int emailHash = Math.abs(email.hashCode()) % 100000000;
                 headers.add("routingHash", String.format("%08d", emailHash));
-                List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
-                for (Rule rule : routingRuleList) {
-                    if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
-                        headers.add("routingIndex", String.valueOf(rule.getIndex()));
-                        break;
+                if (headers.get("routingIndex") == null) {
+                    List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
+                    for (Rule rule : routingRuleList) {
+                        if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
+                            headers.add("routingIndex", String.valueOf(rule.getIndex()));
+                            break;
+                        }
                     }
                 }
             }

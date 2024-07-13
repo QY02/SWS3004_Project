@@ -2,6 +2,7 @@ package org.nus.cloud.loginService.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -20,14 +21,19 @@ public class LoginController {
     private IUserService userService;
 
     @PostMapping("/login")
-    public Result login(@NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
-        String fullId = requestData.getString("id");
+    public Result login(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
+        String fullUserId = request.getHeader("fullUserId");
+        String email = request.getHeader("email");
         String password = requestData.getString("password");
-        if (fullId == null || fullId.length() < 16 || password == null) {
+        if (((fullUserId == null || fullUserId.length() < 16) && (email == null)) || password == null) {
             return Result.error(response, "400", "Invalid login information");
         }
         User user = new User();
-        user.setId(Integer.parseInt(fullId.substring(8)));
+        if ((fullUserId != null) && (fullUserId.length() >= 16)) {
+            user.setId(Integer.parseInt(fullUserId.substring(8)));
+        } else {
+            user.setEmail(email);
+        }
         user.setPassword(password);
         user = userService.login(user);
         return Result.success(response, user);
