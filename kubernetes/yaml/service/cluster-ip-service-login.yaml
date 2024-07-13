@@ -23,16 +23,3 @@ spec:
     apps.kubernetes.io/pod-index: "1"
   ports:
     - port: 25560
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: nus-cloud-project
-  name: cluster-ip-service-login-2
-spec:
-  type: ClusterIP
-  selector:
-    backend: login
-    apps.kubernetes.io/pod-index: "2"
-  ports:
-    - port: 25560
