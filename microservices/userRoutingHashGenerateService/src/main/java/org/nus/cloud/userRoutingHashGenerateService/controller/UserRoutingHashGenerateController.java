@@ -49,11 +49,14 @@ public class UserRoutingHashGenerateController {
             headers.add(headerName, request.getHeader(headerName));
             if (headerName.equalsIgnoreCase("fullUserId")) {
                 String routingHash = request.getHeader(headerName).substring(0, 8);
+                System.out.println(routingHash);
                 int routingHashInt = Integer.parseInt(routingHash);
+                System.out.println(routingHashInt);
                 headers.add("routingHash", routingHash);
                 List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
                 for (Rule rule : routingRuleList) {
                     if (routingHashInt >= rule.getStartHash() && (routingHashInt < rule.getEndHash())) {
+                        System.out.println(rule);
                         headers.add("routingIndex", String.valueOf(rule.getIndex()));
                         break;
                     }
@@ -62,10 +65,12 @@ public class UserRoutingHashGenerateController {
                 String email = request.getHeader(headerName);
                 int emailHash = Math.abs(email.hashCode()) % 100000000;
                 headers.add("routingHash", String.format("%08d", emailHash));
+                System.out.println(emailHash);
                 if (headers.get("routingIndex") == null) {
                     List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
                     for (Rule rule : routingRuleList) {
                         if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
+                            System.out.println(rule);
                             headers.add("routingIndex", String.valueOf(rule.getIndex()));
                             break;
                         }
