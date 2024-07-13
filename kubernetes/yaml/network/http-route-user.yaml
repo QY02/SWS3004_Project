@@ -10,6 +10,36 @@ spec:
       name: cluster-ip-service-user
       port: 25559
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /register
+          headers:
+            - type: Exact
+              name: index
+              value: "0"
+      backendRefs:
         - name: cluster-ip-service-register-0
+          port: 25561
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /register
+          headers:
+            - type: Exact
+              name: index
+              value: "1"
+      backendRefs:
+        - name: cluster-ip-service-register-1
+          port: 25561
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /register
+          headers:
+            - type: Exact
+              name: index
+              value: "2"
+      backendRefs:
+        - name: cluster-ip-service-register-2
           port: 25561
