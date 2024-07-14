@@ -33,6 +33,9 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     @Value("${event-global-data-service.port:}")
     private String eventGlobalDataServicePort;
 
+    @Value("${pod-index:}")
+    private String podIndex;
+
     @Resource
     private EventSessionMapper eventSessionMapper;
 
@@ -143,16 +146,16 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         requestBody.put("publisherFullId", event.getPublisherFullId());
         requestBody.put("publishDatetime", event.getPublishDatetime());
         requestBody.put("name", name);
-        requestBody.put("detailedDataLocation", 0);
-        try {
-            HttpEntity<JSONObject> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/briefEvent/add", HttpMethod.POST, httpEntity, JSONObject.class);
-            if (responseFromService.getStatusCode().value() != 200) {
-                throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
-            }
-        } catch (RestClientException e) {
-            throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
-        }
+        requestBody.put("detailedDataLocation", podIndex);
+//        try {
+//            HttpEntity<JSONObject> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
+//            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/briefEvent/add", HttpMethod.POST, httpEntity, JSONObject.class);
+//            if (responseFromService.getStatusCode().value() != 200) {
+//                throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
+//            }
+//        } catch (RestClientException e) {
+//            throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
+//        }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("event", event);
         jsonObject.put("eventSessionList", eventSessionResultList);

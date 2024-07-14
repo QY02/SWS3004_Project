@@ -13,6 +13,6 @@ WORKDIR /app
 
 COPY --from=build /build/target/eventDetailedDataService-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 25565
+COPY start.sh .
 
-ENTRYPOINT ["java", "-jar", "eventDetailedDataService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "start.sh"]

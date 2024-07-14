@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nus-cloud-project
+  name: cluster-ip-service-event-global-data
+spec:
+  type: ClusterIP
+  selector:
+    backend: event-global-data
+  ports:
+    - port: 25563

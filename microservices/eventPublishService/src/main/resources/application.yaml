@@ -12,6 +12,8 @@ event-global-data-service:
   host: localhost
   port: 25563
 
+pod-index: 0
+
 logging:
   file:
     name: logs/eventPublishService.log

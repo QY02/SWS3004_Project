@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: nus-cloud-project
+  name: stateful-set-event-global-data
+spec:
+  selector:
+    matchLabels:
+      backend: event-global-data
+  serviceName: cluster-ip-service-event-global-data
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        backend: event-global-data
+    spec:
+      containers:
+        - name: events-center-backend-event-global-data
+          image: qy02/events-center-backend-event-global-data
+          ports:
+            - containerPort: 25563
+              name: http
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-event-global-data-springboot-config
+                  key: SPRING_CONFIG_LOCATION
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USERNAME
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: mysql-event-global-data-config
+            - configMapRef:
+                name: mysql-config
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: backend-event-global-data-springboot-config
+            items:
+              - key: application.yaml
+                path: application.yaml

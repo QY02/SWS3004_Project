@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: backend-booking-springboot-config
+data:
+  application.yaml: |
+    server:
+      port: 25567
+    
+    spring:
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+        username: ${MYSQL_USERNAME}
+        password: ${MYSQL_PASSWORD}
+    
+    order-record-service:
+      host: cluster-ip-service-event.nus-cloud-project.svc.cluster.local
+      port: 25661
+    
+    logging:
+      file:
+        name: logs/bookingService.log
+        path: logs/bookingService
+      level:
+        root: INFO
+  SPRING_CONFIG_LOCATION: "file:/config/application.yaml"

@@ -32,3 +32,64 @@ spec:
       backendRefs:
         - name: cluster-ip-service-order-record-1
           port: 25566
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /briefEvent
+        - path:
+            type: PathPrefix
+            value: seatMapTemplate
+      backendRefs:
+        - name: cluster-ip-service-event-global-data
+          port: 25563
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /detailedEvent
+          headers:
+            - type: Exact
+              name: eventRoutingIndex
+              value: "0"
+      backendRefs:
+        - name: cluster-ip-service-event-detailed-data-0
+          port: 25565
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /detailedEvent
+          headers:
+            - type: Exact
+              name: eventRoutingIndex
+              value: "1"
+      backendRefs:
+        - name: cluster-ip-service-event-detailed-data-1
+          port: 25565
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /book
+          headers:
+            - type: Exact
+              name: eventRoutingIndex
+              value: "0"
+      backendRefs:
+        - name: cluster-ip-service-booking-0
+          port: 25567
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /book
+          headers:
+            - type: Exact
+              name: eventRoutingIndex
+              value: "1"
+      backendRefs:
+        - name: cluster-ip-service-booking-1
+          port: 25567
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /publishEvent
+      backendRefs:
+        - name: cluster-ip-service-event-publish
+          port: 25564

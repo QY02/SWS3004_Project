@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: backend-event-publish-springboot-config
+data:
+  application.yaml: |
+    server:
+      port: 25564
+    
+    spring:
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+        username: ${MYSQL_USERNAME}
+        password: ${MYSQL_PASSWORD}
+    
+    event-global-data-service:
+      host: cluster-ip-service-event.nus-cloud-project.svc.cluster.local
+      port: 25661
+    
+    pod-index: ${POD_INDEX}
+    
+    logging:
+      file:
+        name: logs/eventPublishService.log
+        path: logs/eventPublishService
+      level:
+        root: INFO
+  SPRING_CONFIG_LOCATION: "file:/config/application.yaml"
