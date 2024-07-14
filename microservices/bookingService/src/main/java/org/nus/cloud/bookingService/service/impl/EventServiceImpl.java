@@ -92,7 +92,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         httpHeaders.add("routingIndex", userRoutingIndex);
         try {
             HttpEntity<OrderRecord> httpEntity = new HttpEntity<>(orderRecord, httpHeaders);
-            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + orderRecordServiceHost + ":" + orderRecordServicePort + "/add", HttpMethod.POST, httpEntity, JSONObject.class);
+            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + orderRecordServiceHost + ":" + orderRecordServicePort + "/orderRecord/add", HttpMethod.POST, httpEntity, JSONObject.class);
             if (responseFromService.getStatusCode().value() != 200) {
                 throw new ServiceException("500", "An error occurred when sending order record to order record service");
             } else {
