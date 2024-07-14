@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nus-cloud-project
+  name: cluster-ip-service-rabbitmq
+spec:
+  type: ClusterIP
+  selector:
+    middleware: rabbitmq
+  ports:
+    - port: 5672

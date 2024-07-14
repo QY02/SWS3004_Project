@@ -9,6 +9,8 @@ import org.nus.cloud.eventPublishService.entity.*;
 import org.nus.cloud.eventPublishService.exception.ServiceException;
 import org.nus.cloud.eventPublishService.mapper.*;
 import org.nus.cloud.eventPublishService.service.IEventService;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,6 +52,12 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
 
     @Resource
     private SeatMapper seatMapper;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
+    @Resource
+    private FanoutExchange fanoutExchange;
 
     @Override
     public JSONObject publishEvent(String fullUserId, JSONObject requestData) {
@@ -139,23 +147,13 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
             eventSessionMapper.insert(eventSession);
             eventSessionResultList.add(eventSession);
         });
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("id", event.getId());
-        requestBody.put("publisherFullId", event.getPublisherFullId());
-        requestBody.put("publishDatetime", event.getPublishDatetime());
-        requestBody.put("name", name);
-        requestBody.put("detailedDataLocation", podIndex);
-//        try {
-//            HttpEntity<JSONObject> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-//            ResponseEntity<JSONObject> responseFromService = restTemplate.exchange("http://" + eventGlobalDataServiceHost + ":" + eventGlobalDataServicePort + "/briefEvent/add", HttpMethod.POST, httpEntity, JSONObject.class);
-//            if (responseFromService.getStatusCode().value() != 200) {
-//                throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
-//            }
-//        } catch (RestClientException e) {
-//            throw new ServiceException("500", "An error occurred when sending brief event data to event global data service");
-//        }
+        JSONObject eventBriefData = new JSONObject();
+        eventBriefData.put("id", event.getId());
+        eventBriefData.put("publisherFullId", event.getPublisherFullId());
+        eventBriefData.put("publishDatetime", event.getPublishDatetime());
+        eventBriefData.put("name", name);
+        eventBriefData.put("detailedDataLocation", podIndex);
+        rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", eventBriefData.toString());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("event", event);
         jsonObject.put("eventSessionList", eventSessionResultList);

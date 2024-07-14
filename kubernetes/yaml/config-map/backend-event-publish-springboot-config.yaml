@@ -14,6 +14,12 @@ data:
         url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
         username: ${MYSQL_USERNAME}
         password: ${MYSQL_PASSWORD}
+      rabbitmq:
+        host: ${RABBITMQ_HOST}
+        port: ${RABBITMQ_PORT}
+        virtual-host: ${RABBITMQ_VIRTUAL_HOST}
+        username: ${RABBITMQ_USERNAME}
+        password: ${RABBITMQ_PASSWORD}
     
     event-global-data-service:
       host: cluster-ip-service-event.nus-cloud-project.svc.cluster.local

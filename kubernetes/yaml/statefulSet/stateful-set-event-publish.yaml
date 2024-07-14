@@ -45,6 +45,10 @@ spec:
                 name: mysql-event-detailed-data-config
             - configMapRef:
                 name: mysql-config
+            - configMapRef:
+                name: rabbitmq-config
+            - secretRef:
+                name: rabbitmq-secret
           volumeMounts:
             - name: config-volume
               mountPath: /config
