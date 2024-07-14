@@ -38,7 +38,7 @@ spec:
             value: /briefEvent
         - path:
             type: PathPrefix
-            value: seatMapTemplate
+            value: /seatMapTemplate
       backendRefs:
         - name: cluster-ip-service-event-global-data
           port: 25563

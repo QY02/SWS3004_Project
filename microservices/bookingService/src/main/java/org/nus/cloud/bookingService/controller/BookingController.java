@@ -21,6 +21,10 @@ public class BookingController {
 
     @PostMapping("/book")
     public Result book(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
+        String userRoutingIndex = request.getHeader("routingIndex");
+        if ((userRoutingIndex == null) || (userRoutingIndex.isBlank())) {
+            return Result.error(response, "500", "Invalid userRoutingIndex");
+        }
         String fullUserId = request.getHeader("fullUserId");
         if ((fullUserId == null) || (fullUserId.isBlank())) {
             fullUserId = request.getParameter("fullUserId");
@@ -28,6 +32,6 @@ public class BookingController {
         if ((fullUserId == null) || (fullUserId.isBlank())) {
             return Result.error(response, "401", "Invalid fullUserId");
         }
-        return Result.success(response, eventService.book(fullUserId, requestData));
+        return Result.success(response, eventService.book(userRoutingIndex, fullUserId, requestData));
     }
 }
