@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.nus.cloud.eventGlobalDataService.entity.BriefEvent;
 import org.nus.cloud.eventGlobalDataService.service.IBriefEventService;
 import org.nus.cloud.eventGlobalDataService.utils.Result;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,11 @@ public class BriefEventController {
 
     @PostMapping("/add")
     public Result addBriefEvent(@NotNull HttpServletResponse response, @RequestBody BriefEvent briefEvent) {
-        briefEventService.save(briefEvent);
+        try {
+            briefEventService.save(briefEvent);
+        } catch (DuplicateKeyException e) {
+            return Result.error(response, "400", "The event already exists");
+        }
         return Result.success(response);
     }
 }

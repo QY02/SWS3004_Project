@@ -20,12 +20,16 @@ public class BriefEventServiceImpl extends ServiceImpl<BriefEventMapper, BriefEv
     public List<BriefEvent> getBriefEventList(JSONObject requestData) {
         QueryWrapper<BriefEvent> queryWrapper = new QueryWrapper<>();
         Integer id = requestData.getInteger("id");
+        Integer detailedDataLocation = requestData.getInteger("detailedDataLocation");
         String publisherFullId = requestData.getString("publisherFullId");
         LocalDateTime searchTimeStart = requestData.getObject("searchTimeStart", LocalDateTime.class);
         LocalDateTime searchTimeEnd = requestData.getObject("searchTimeEnd", LocalDateTime.class);
         String name = requestData.getString("name");
         if (id != null) {
             queryWrapper.eq("id", id);
+        }
+        if (detailedDataLocation != null) {
+            queryWrapper.eq("detailed_data_location", detailedDataLocation);
         }
         if (publisherFullId != null) {
             queryWrapper.eq("publisher_full_id", publisherFullId);
