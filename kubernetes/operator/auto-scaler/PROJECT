@@ -11,9 +11,13 @@ plugins:
 projectName: auto-scaler
 repo: github.com/qy02/SWS3004_Project
 resources:
-- controller: true
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
   domain: nus-cloud-project
-  group: nus-cloud-project
+  group: auto-scaler
   kind: AutoScaler
+  path: github.com/qy02/SWS3004_Project/api/v1
   version: v1
 version: "3"
