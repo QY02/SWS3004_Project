@@ -1,0 +1,17 @@
+2024-07-11T14:14:00.228+08:00  INFO 7200 --- [restartedMain] o.e.fileServer.FileServerApplication     : Starting FileServerApplication using Java 17.0.11 with PID 7200 (C:\Users\ryuu\Desktop\SWS3004_Project\reference_code\fileServer\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:14:00.231+08:00  INFO 7200 --- [restartedMain] o.e.fileServer.FileServerApplication     : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:14:00.291+08:00  INFO 7200 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-07-11T14:14:00.293+08:00  INFO 7200 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-07-11T14:14:01.104+08:00  INFO 7200 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-11T14:14:01.107+08:00  INFO 7200 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-11T14:14:01.142+08:00  INFO 7200 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2024-07-11T14:14:01.734+08:00  INFO 7200 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25572 (http)
+2024-07-11T14:14:01.749+08:00  INFO 7200 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:14:01.750+08:00  INFO 7200 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-07-11T14:14:01.824+08:00  INFO 7200 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:14:01.825+08:00  INFO 7200 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1531 ms
+2024-07-11T14:14:03.063+08:00  INFO 7200 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-07-11T14:14:03.110+08:00  INFO 7200 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25572 (http) with context path ''
+2024-07-11T14:14:03.123+08:00  INFO 7200 --- [restartedMain] o.e.fileServer.FileServerApplication     : Started FileServerApplication in 3.416 seconds (process running for 4.254)
+2024-07-11T14:14:03.126+08:00  INFO 7200 --- [restartedMain] o.e.fileServer.component.ServerInfo      : FileServer is running at http://localhost:25572
+2024-07-11T14:14:03.127+08:00  INFO 7200 --- [restartedMain] o.e.fileServer.component.ServerInfo      : FileServer Swagger is running at http://localhost:25572/swagger-ui/index.html

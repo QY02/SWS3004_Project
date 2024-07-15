@@ -1,0 +1,27 @@
+# permissions for end users to view autoscalers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: autoscaler-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: operator
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: autoscaler-viewer-role
+rules:
+- apiGroups:
+  - autoscaling.my.domain
+  resources:
+  - autoscalers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - autoscaling.my.domain
+  resources:
+  - autoscalers/status
+  verbs:
+  - get
