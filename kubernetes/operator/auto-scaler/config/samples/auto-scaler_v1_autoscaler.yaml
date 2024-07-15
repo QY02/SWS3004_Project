@@ -1,0 +1,12 @@
+apiVersion: auto-scaler.nus-cloud-project/v1
+kind: AutoScaler
+metadata:
+  labels:
+    app.kubernetes.io/name: autoscaler
+    app.kubernetes.io/instance: autoscaler-sample
+    app.kubernetes.io/part-of: auto-scaler
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: auto-scaler
+  name: autoscaler-sample
+spec:
+  # TODO(user): Add fields here

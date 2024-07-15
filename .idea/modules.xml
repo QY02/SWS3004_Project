@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Project.iml" filepath="$PROJECT_DIR$/.idea/Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kubernetes/operator/auto-scaler/auto-scaler.iml" filepath="$PROJECT_DIR$/kubernetes/operator/auto-scaler/auto-scaler.iml" />
     </modules>
   </component>
 </project>

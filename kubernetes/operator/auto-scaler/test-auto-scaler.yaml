@@ -1,0 +1,7 @@
+apiVersion: "auto-scaler.nus-cloud-project/v1"
+kind: AutoScaler
+metadata:
+  namespace: nus-cloud-project
+  name: test-auto-scaler
+spec:
+  maxTableSize: 6
