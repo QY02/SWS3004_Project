@@ -1,0 +1,20 @@
+2024-07-11T14:14:16.174+08:00  INFO 25760 --- [main] o.n.c.r.RegisterServiceApplication       : Starting RegisterServiceApplication using Java 17.0.11 with PID 25760 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\registerService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:14:16.176+08:00  INFO 25760 --- [main] o.n.c.r.RegisterServiceApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:14:17.381+08:00  INFO 25760 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25561 (http)
+2024-07-11T14:14:17.398+08:00  INFO 25760 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:14:17.398+08:00  INFO 25760 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:14:17.462+08:00  INFO 25760 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:14:17.462+08:00  INFO 25760 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1226 ms
+2024-07-11T14:14:18.518+08:00  INFO 25760 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25561 (http) with context path ''
+2024-07-11T14:14:18.532+08:00  INFO 25760 --- [main] o.n.c.r.RegisterServiceApplication       : Started RegisterServiceApplication in 2.911 seconds (process running for 3.477)
+2024-07-11T14:14:18.536+08:00  INFO 25760 --- [main] o.n.c.r.component.ServerInfo             : RegisterService is running at http://localhost:25561
+2024-07-11T14:17:33.000+08:00  INFO 25216 --- [main] o.n.c.r.RegisterServiceApplication       : Starting RegisterServiceApplication using Java 17.0.11 with PID 25216 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\registerService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:17:33.004+08:00  INFO 25216 --- [main] o.n.c.r.RegisterServiceApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:17:34.181+08:00  INFO 25216 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25561 (http)
+2024-07-11T14:17:34.196+08:00  INFO 25216 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:17:34.197+08:00  INFO 25216 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:17:34.265+08:00  INFO 25216 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:17:34.266+08:00  INFO 25216 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1200 ms
+2024-07-11T14:17:35.333+08:00  INFO 25216 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25561 (http) with context path ''
+2024-07-11T14:17:35.349+08:00  INFO 25216 --- [main] o.n.c.r.RegisterServiceApplication       : Started RegisterServiceApplication in 2.912 seconds (process running for 3.544)
+2024-07-11T14:17:35.352+08:00  INFO 25216 --- [main] o.n.c.r.component.ServerInfo             : RegisterService is running at http://localhost:25561

@@ -1,0 +1,43 @@
+2024-07-11T14:13:22.838+08:00  INFO 9852 --- [restartedMain] org.cs304.backend.BackendApplication     : Starting BackendApplication using Java 17.0.11 with PID 9852 (C:\Users\ryuu\Desktop\SWS3004_Project\reference_code\backend\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:13:22.842+08:00  INFO 9852 --- [restartedMain] org.cs304.backend.BackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:13:22.911+08:00  INFO 9852 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-07-11T14:13:22.912+08:00  INFO 9852 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-07-11T14:13:24.596+08:00  INFO 9852 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-11T14:13:24.600+08:00  INFO 9852 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-11T14:13:24.653+08:00  INFO 9852 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 0 Redis repository interfaces.
+2024-07-11T14:13:26.108+08:00  INFO 9852 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8083 (http)
+2024-07-11T14:13:26.129+08:00  INFO 9852 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:13:26.129+08:00  INFO 9852 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-07-11T14:13:26.218+08:00  INFO 9852 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:13:26.219+08:00  INFO 9852 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3306 ms
+2024-07-11T14:13:26.497+08:00  WARN 9852 --- [restartedMain] o.c.b.component.CheckConfiguration       : AMap security js code not set, some features related to AMap will not work properly
+2024-07-11T14:13:26.968+08:00  WARN 9852 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.Seat".
+2024-07-11T14:13:26.968+08:00  WARN 9852 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.Seat ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:27.621+08:00  WARN 9852 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.EntityAttachmentRelation".
+2024-07-11T14:13:27.621+08:00  WARN 9852 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.EntityAttachmentRelation ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:27.680+08:00  WARN 9852 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserInteraction".
+2024-07-11T14:13:27.681+08:00  WARN 9852 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserInteraction ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:27.709+08:00  WARN 9852 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.UserFavoriteType".
+2024-07-11T14:13:27.709+08:00  WARN 9852 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.UserFavoriteType ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:27.744+08:00  WARN 9852 --- [restartedMain] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.cs304.backend.entity.History".
+2024-07-11T14:13:27.745+08:00  WARN 9852 --- [restartedMain] c.b.m.core.injector.DefaultSqlInjector   : class org.cs304.backend.entity.History ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:27.824+08:00  WARN 9852 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'adminController': Injection of resource dependencies failed
+2024-07-11T14:13:27.830+08:00  INFO 9852 --- [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2024-07-11T14:13:27.867+08:00  INFO 9852 --- [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-07-11T14:13:27.903+08:00 ERROR 9852 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+A component required a bean of type 'org.springframework.mail.javamail.JavaMailSender' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.mail.javamail.JavaMailSender' in your configuration.
+
