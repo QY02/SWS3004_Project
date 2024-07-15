@@ -1,0 +1,24 @@
+2024-07-11T14:13:45.398+08:00  INFO 25428 --- [main] .n.c.e.EventGlobalDataServiceApplication : Starting EventGlobalDataServiceApplication using Java 17.0.11 with PID 25428 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\eventGlobalDataService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:13:45.401+08:00  INFO 25428 --- [main] .n.c.e.EventGlobalDataServiceApplication : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:13:46.579+08:00  INFO 25428 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25563 (http)
+2024-07-11T14:13:46.598+08:00  INFO 25428 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:13:46.598+08:00  INFO 25428 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:13:46.666+08:00  INFO 25428 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:13:46.666+08:00  INFO 25428 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1213 ms
+2024-07-11T14:13:47.319+08:00  WARN 25428 --- [main] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.nus.cloud.eventGlobalDataService.entity.SeatTemplate".
+2024-07-11T14:13:47.319+08:00  WARN 25428 --- [main] c.b.m.core.injector.DefaultSqlInjector   : class org.nus.cloud.eventGlobalDataService.entity.SeatTemplate ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:13:47.806+08:00  INFO 25428 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25563 (http) with context path ''
+2024-07-11T14:13:47.819+08:00  INFO 25428 --- [main] .n.c.e.EventGlobalDataServiceApplication : Started EventGlobalDataServiceApplication in 2.98 seconds (process running for 3.701)
+2024-07-11T14:13:47.822+08:00  INFO 25428 --- [main] o.n.c.e.component.ServerInfo             : EventGlobalDataService is running at http://localhost:25563
+2024-07-11T14:17:22.048+08:00  INFO 6256 --- [main] .n.c.e.EventGlobalDataServiceApplication : Starting EventGlobalDataServiceApplication using Java 17.0.11 with PID 6256 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\eventGlobalDataService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:17:22.051+08:00  INFO 6256 --- [main] .n.c.e.EventGlobalDataServiceApplication : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:17:23.345+08:00  INFO 6256 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25563 (http)
+2024-07-11T14:17:23.358+08:00  INFO 6256 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:17:23.359+08:00  INFO 6256 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:17:23.433+08:00  INFO 6256 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:17:23.434+08:00  INFO 6256 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1323 ms
+2024-07-11T14:17:24.134+08:00  WARN 6256 --- [main] c.b.m.core.metadata.TableInfoHelper      : Can not find table primary key in Class: "org.nus.cloud.eventGlobalDataService.entity.SeatTemplate".
+2024-07-11T14:17:24.135+08:00  WARN 6256 --- [main] c.b.m.core.injector.DefaultSqlInjector   : class org.nus.cloud.eventGlobalDataService.entity.SeatTemplate ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2024-07-11T14:17:24.687+08:00  INFO 6256 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25563 (http) with context path ''
+2024-07-11T14:17:24.700+08:00  INFO 6256 --- [main] .n.c.e.EventGlobalDataServiceApplication : Started EventGlobalDataServiceApplication in 3.261 seconds (process running for 3.96)
+2024-07-11T14:17:24.704+08:00  INFO 6256 --- [main] o.n.c.e.component.ServerInfo             : EventGlobalDataService is running at http://localhost:25563

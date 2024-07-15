@@ -1,0 +1,20 @@
+2024-07-11T14:14:09.300+08:00  INFO 25820 --- [main] o.n.c.o.OrderRecordServiceApplication    : Starting OrderRecordServiceApplication using Java 17.0.11 with PID 25820 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\orderRecordService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:14:09.303+08:00  INFO 25820 --- [main] o.n.c.o.OrderRecordServiceApplication    : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:14:10.585+08:00  INFO 25820 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25566 (http)
+2024-07-11T14:14:10.601+08:00  INFO 25820 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:14:10.602+08:00  INFO 25820 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:14:10.675+08:00  INFO 25820 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:14:10.675+08:00  INFO 25820 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1313 ms
+2024-07-11T14:14:11.836+08:00  INFO 25820 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25566 (http) with context path ''
+2024-07-11T14:14:11.849+08:00  INFO 25820 --- [main] o.n.c.o.OrderRecordServiceApplication    : Started OrderRecordServiceApplication in 3.122 seconds (process running for 3.884)
+2024-07-11T14:14:11.854+08:00  INFO 25820 --- [main] o.n.c.o.component.ServerInfo             : OrderRecordService is running at http://localhost:25566
+2024-07-11T14:17:30.283+08:00  INFO 26616 --- [main] o.n.c.o.OrderRecordServiceApplication    : Starting OrderRecordServiceApplication using Java 17.0.11 with PID 26616 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\orderRecordService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:17:30.287+08:00  INFO 26616 --- [main] o.n.c.o.OrderRecordServiceApplication    : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:17:31.546+08:00  INFO 26616 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25566 (http)
+2024-07-11T14:17:31.561+08:00  INFO 26616 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:17:31.561+08:00  INFO 26616 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:17:31.642+08:00  INFO 26616 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:17:31.643+08:00  INFO 26616 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1301 ms
+2024-07-11T14:17:32.727+08:00  INFO 26616 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25566 (http) with context path ''
+2024-07-11T14:17:32.743+08:00  INFO 26616 --- [main] o.n.c.o.OrderRecordServiceApplication    : Started OrderRecordServiceApplication in 3.041 seconds (process running for 3.669)
+2024-07-11T14:17:32.747+08:00  INFO 26616 --- [main] o.n.c.o.component.ServerInfo             : OrderRecordService is running at http://localhost:25566
