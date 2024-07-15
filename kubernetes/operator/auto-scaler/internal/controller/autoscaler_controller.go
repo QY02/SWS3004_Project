@@ -23,6 +23,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 
+	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -92,30 +93,86 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		currentMaxTableSize = int(autoScaler.Spec.MaxTableSize)
 		fmt.Printf("MaxTableSize set to %d\n", currentMaxTableSize)
 
-		ticker = time.NewTicker(2 * time.Second)
+		ticker = time.NewTicker(30 * time.Second)
 		quit = make(chan struct{})
 		go func() {
 			for {
 				select {
 				case t := <-ticker.C:
 					fmt.Println("Tick at", t)
-					database_address := "root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-user-0.stateful-set-mysql-user.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project"
-					database, err := sql.Open("mysql", database_address)
-					if err != nil {
-						logger.Error(err, "An error occur when connecting to database")
+
+					fmt.Println("Scanning databases for user data")
+
+					var statefulSetMySqlUser appsv1.StatefulSet
+					if err := r.Get(ctx, client.ObjectKey{
+						Namespace: req.Namespace,
+						Name:      "stateful-set-mysql-user",
+					}, &statefulSetMySqlUser); err != nil {
+						if !errors.IsNotFound(err) {
+							logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+						}
 					}
-					defer database.Close()
-					result, err := database.Query("select count(*) from user;")
-					if err != nil {
-						logger.Error(err, "An error occur when querying")
+					replicasMySqlUser := *statefulSetMySqlUser.Spec.Replicas
+
+					for i := 0; i < int(replicasMySqlUser); i++ {
+						database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-user-%d.headless-service-mysql-user.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
+						database, err := sql.Open("mysql", database_address)
+						if err != nil {
+							logger.Error(err, "An error occur when connecting to database")
+						}
+						defer database.Close()
+						result, err := database.Query("select count(*) from user;")
+						if err != nil {
+							logger.Error(err, "An error occur when querying")
+						}
+						result.Next()
+						var rowCount int
+						err = result.Scan(&rowCount)
+						if err != nil {
+							logger.Error(err, "An error occur when getting row count")
+						}
+						fmt.Printf("%d rows in database %d\n", rowCount, i)
+						if rowCount > currentMaxTableSize {
+							fmt.Println("Row count exceeds max value")
+						}
 					}
-					result.Next()
-					var rowCount int
-					err = result.Scan(&rowCount)
-					if err != nil {
-						logger.Error(err, "An error occur when getting row count")
+
+					fmt.Println("Scanning databases for event detailed data")
+
+					var statefulSetMySqlEventDetailedData appsv1.StatefulSet
+					if err := r.Get(ctx, client.ObjectKey{
+						Namespace: req.Namespace,
+						Name:      "stateful-set-mysql-event-detailed-data",
+					}, &statefulSetMySqlEventDetailedData); err != nil {
+						if !errors.IsNotFound(err) {
+							logger.Error(err, "unable to fetch StatefulSetMySqlEventDetailedData")
+						}
 					}
-					fmt.Printf("%d rows", rowCount)
+					replicasMySqlEventDetailedData := *statefulSetMySqlEventDetailedData.Spec.Replicas
+
+					for i := 0; i < int(replicasMySqlEventDetailedData); i++ {
+						database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-event-detailed-data-%d.headless-service-mysql-event-detailed-data.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
+						database, err := sql.Open("mysql", database_address)
+						if err != nil {
+							logger.Error(err, "An error occur when connecting to database")
+						}
+						defer database.Close()
+						result, err := database.Query("select count(*) from event;")
+						if err != nil {
+							logger.Error(err, "An error occur when querying")
+						}
+						result.Next()
+						var rowCount int
+						err = result.Scan(&rowCount)
+						if err != nil {
+							logger.Error(err, "An error occur when getting row count")
+						}
+						fmt.Printf("%d rows in database %d\n", rowCount, i)
+						if rowCount > currentMaxTableSize {
+							fmt.Println("Row count exceeds max value")
+						}
+					}
+
 				case <-quit:
 					fmt.Println("Ticker stopped")
 					return

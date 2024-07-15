@@ -51,7 +51,7 @@ endif
 OPERATOR_SDK_VERSION ?= v1.35.0
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= qy02/controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.28.3
 
@@ -190,6 +190,8 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 
 .PHONY: deploy
 deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	kubectl apply -f namespace-auto-scaler-system.yaml
+	kubectl label namespace auto-scaler-system istio-injection=enabled
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | $(KUBECTL) apply -f -
 
