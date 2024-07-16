@@ -58,35 +58,35 @@ const rules = {
 // axios.defaults.baseURL = apiUrl;
 const handleSubmit = ({validateResult}) => {
   if (validateResult === true) {
-    // axios.post("/login", {
-    //   id: formData.account,
-    //   password: formData.password
-    // })
-    //     .then((response) => {
-    //       const rd = response.data.data.id;
-    //       const type = response.data.data.type
-    //       const token = response.data.data.password
-    //       const themeColor = response.data.data.themeColor
-    //       sessionStorage.setItem('primary-color', themeColor);
-    //
-    //       sessionStorage.setItem('uid', rd);
-    //       sessionStorage.setItem('token', token);
-    //       sessionStorage.setItem('username', response.data.data.name)
-    //
-    //       MessagePlugin.success("Welcome! " + rd);
-    //       if (type === 0) {//管理员
-    //         router.push("/admin/homepage");
-    //       } else {//正常用户
-    //         router.push("/HomePage");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       if (error.response) {
-    //         MessagePlugin.error(error.response.data.msg);
-    //       } else {
-    //         MessagePlugin.error(error.message);
-    //       }
-    //     });
+    axios.post("/login", {
+      id: formData.account,
+      password: formData.password
+    })
+        .then((response) => {
+          const rd = response.data.data.id;
+          const type = response.data.data.type
+          const token = response.data.data.password
+          const themeColor = response.data.data.themeColor
+          sessionStorage.setItem('primary-color', themeColor);
+
+          sessionStorage.setItem('uid', rd);
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('username', response.data.data.name)
+
+          MessagePlugin.success("Welcome! " + rd);
+          if (type === 0) {//管理员
+            router.push("/admin/homepage");
+          } else {//正常用户
+            router.push("/HomePage");
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            MessagePlugin.error(error.response.data.msg);
+          } else {
+            MessagePlugin.error(error.message);
+          }
+        });
   } else {
     MessagePlugin.warning("Please make sure the input format is correct!")
   }
