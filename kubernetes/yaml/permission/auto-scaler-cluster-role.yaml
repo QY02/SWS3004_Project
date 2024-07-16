@@ -5,4 +5,10 @@ metadata:
 rules:
   - apiGroups: [ "apps" ]
     resources: [ "statefulsets" ]
-    verbs: [ "get", "list", "watch" ]
+    verbs: [ "get", "list", "watch", "update", "patch" ]
+  - apiGroups: [ "" ]
+    resources: [ "configmaps", "pods" ]
+    verbs: [ "get", "list", "watch", "update", "patch" ]
+  - apiGroups: [ "" ]
+    resources: [ "pods/exec" ]
+    verbs: [ "create" ]
