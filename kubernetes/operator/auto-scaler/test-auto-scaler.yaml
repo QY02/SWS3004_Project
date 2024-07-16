@@ -4,4 +4,4 @@ metadata:
   namespace: nus-cloud-project
   name: test-auto-scaler
 spec:
-  maxTableSize: 6
+  maxTableSize: 2
