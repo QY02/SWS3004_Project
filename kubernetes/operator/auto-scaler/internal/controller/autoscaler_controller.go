@@ -20,10 +20,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"time"
 
+	_ "github.com/go-sql-driver/mysql"
+
+	"gopkg.in/yaml.v2"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -32,6 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	autoscalerv1 "github.com/qy02/SWS3004_Project/api/v1"
+	// v1 "github.com/qy02/SWS3004_Project/api/v1"
 )
 
 // AutoScalerReconciler reconciles a AutoScaler object
@@ -93,92 +97,162 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		currentMaxTableSize = int(autoScaler.Spec.MaxTableSize)
 		fmt.Printf("MaxTableSize set to %d\n", currentMaxTableSize)
 
-		ticker = time.NewTicker(30 * time.Second)
-		quit = make(chan struct{})
-		go func() {
-			for {
-				select {
-				case t := <-ticker.C:
-					fmt.Println("Tick at", t)
+		//TODO: use database index
+		//TODO: get correct index
+		midHash := splitRoutingRule(ctx, r, req)
+		fmt.Printf("midHash = %d\n", midHash)
 
-					fmt.Println("Scanning databases for user data")
-
-					var statefulSetMySqlUser appsv1.StatefulSet
+		var statefulSetMySqlUser appsv1.StatefulSet
+		if err := r.Get(ctx, client.ObjectKey{
+			Namespace: req.Namespace,
+			Name:      "stateful-set-mysql-user",
+		}, &statefulSetMySqlUser); err == nil {
+			replicasMySqlUser := *statefulSetMySqlUser.Spec.Replicas
+			replicasMySqlUser++
+			statefulSetMySqlUser.Spec.Replicas = &replicasMySqlUser
+			newPodMySqlUserIndex := replicasMySqlUser - 1
+			if err := r.Update(ctx, &statefulSetMySqlUser); err == nil {
+				var newPodMySqlUser corev1.Pod
+				newPodMySqlUserReady := false
+				for j := 0; j < 10; j++ {
 					if err := r.Get(ctx, client.ObjectKey{
 						Namespace: req.Namespace,
-						Name:      "stateful-set-mysql-user",
-					}, &statefulSetMySqlUser); err != nil {
-						if !errors.IsNotFound(err) {
-							logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+						Name:      fmt.Sprintf("stateful-set-mysql-user-%d", newPodMySqlUserIndex),
+					}, &newPodMySqlUser); err == nil {
+						for _, condition := range newPodMySqlUser.Status.Conditions {
+							if condition.Type == corev1.PodReady {
+								if condition.Status == corev1.ConditionTrue {
+									newPodMySqlUserReady = true
+								}
+								break
+							}
 						}
+						if newPodMySqlUserReady {
+							break
+						}
+					} else {
+						logger.Error(err, "unable to fetch NewPodMySqlUser")
 					}
-					replicasMySqlUser := *statefulSetMySqlUser.Spec.Replicas
-
-					for i := 0; i < int(replicasMySqlUser); i++ {
-						database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-user-%d.headless-service-mysql-user.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
-						database, err := sql.Open("mysql", database_address)
-						if err != nil {
-							logger.Error(err, "An error occur when connecting to database")
-						}
-						defer database.Close()
-						result, err := database.Query("select count(*) from user;")
-						if err != nil {
-							logger.Error(err, "An error occur when querying")
-						}
-						result.Next()
-						var rowCount int
-						err = result.Scan(&rowCount)
-						if err != nil {
-							logger.Error(err, "An error occur when getting row count")
-						}
-						fmt.Printf("%d rows in database %d\n", rowCount, i)
-						if rowCount > currentMaxTableSize {
-							fmt.Println("Row count exceeds max value")
-						}
-					}
-
-					fmt.Println("Scanning databases for event detailed data")
-
-					var statefulSetMySqlEventDetailedData appsv1.StatefulSet
-					if err := r.Get(ctx, client.ObjectKey{
-						Namespace: req.Namespace,
-						Name:      "stateful-set-mysql-event-detailed-data",
-					}, &statefulSetMySqlEventDetailedData); err != nil {
-						if !errors.IsNotFound(err) {
-							logger.Error(err, "unable to fetch StatefulSetMySqlEventDetailedData")
-						}
-					}
-					replicasMySqlEventDetailedData := *statefulSetMySqlEventDetailedData.Spec.Replicas
-
-					for i := 0; i < int(replicasMySqlEventDetailedData); i++ {
-						database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-event-detailed-data-%d.headless-service-mysql-event-detailed-data.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
-						database, err := sql.Open("mysql", database_address)
-						if err != nil {
-							logger.Error(err, "An error occur when connecting to database")
-						}
-						defer database.Close()
-						result, err := database.Query("select count(*) from event;")
-						if err != nil {
-							logger.Error(err, "An error occur when querying")
-						}
-						result.Next()
-						var rowCount int
-						err = result.Scan(&rowCount)
-						if err != nil {
-							logger.Error(err, "An error occur when getting row count")
-						}
-						fmt.Printf("%d rows in database %d\n", rowCount, i)
-						if rowCount > currentMaxTableSize {
-							fmt.Println("Row count exceeds max value")
-						}
-					}
-
-				case <-quit:
-					fmt.Println("Ticker stopped")
-					return
+					time.Sleep(5 * time.Second)
 				}
+				if newPodMySqlUserReady {
+					newDatabaseAddress := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-user-%d.headless-service-mysql-user.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", newPodMySqlUserIndex)
+					newDatabase, err := sql.Open("mysql", newDatabaseAddress)
+					if err == nil {
+						defer newDatabase.Close()
+						newDatabaseReady := false
+						for j := 0; j < 10; j++ {
+							if err := newDatabase.Ping(); err == nil {
+								newDatabaseReady = true
+								break
+							}
+						}
+						if newDatabaseReady {
+							fmt.Println("Successs!!!!!")
+						} else {
+							fmt.Println("NewDatabase start timeout")
+						}
+					} else {
+						logger.Error(err, "An error occur when connecting to database")
+					}
+				} else {
+					fmt.Println("NewPodMySqlUser start timeout")
+				}
+			} else {
+				logger.Error(err, "unable to update StatefulSetMySqlUser")
 			}
-		}()
+		} else {
+			if !errors.IsNotFound(err) {
+				logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+			}
+		}
+
+		// ticker = time.NewTicker(30 * time.Second)
+		// quit = make(chan struct{})
+		// go func() {
+		// 	for {
+		// 		select {
+		// 		case t := <-ticker.C:
+		// 			fmt.Println("Tick at", t)
+
+		// 			fmt.Println("Scanning databases for user data")
+
+		// 			var statefulSetMySqlUser appsv1.StatefulSet
+		// 			if err := r.Get(ctx, client.ObjectKey{
+		// 				Namespace: req.Namespace,
+		// 				Name:      "stateful-set-mysql-user",
+		// 			}, &statefulSetMySqlUser); err != nil {
+		// 				if !errors.IsNotFound(err) {
+		// 					logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+		// 				}
+		// 			}
+		// 			replicasMySqlUser := *statefulSetMySqlUser.Spec.Replicas
+
+		// 			for i := 0; i < int(replicasMySqlUser); i++ {
+		// 				database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-user-%d.headless-service-mysql-user.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
+		// 				database, err := sql.Open("mysql", database_address)
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when connecting to database")
+		// 				}
+		// 				defer database.Close()
+		// 				result, err := database.Query("select count(*) from user;")
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when querying")
+		// 				}
+		// 				result.Next()
+		// 				var rowCount int
+		// 				err = result.Scan(&rowCount)
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when getting row count")
+		// 				}
+		// 				fmt.Printf("%d rows in database %d\n", rowCount, i)
+		// 				if rowCount > currentMaxTableSize {
+		// 					fmt.Println("Row count exceeds max value")
+		// 				}
+		// 			}
+
+		// 			fmt.Println("Scanning databases for event detailed data")
+
+		// 			var statefulSetMySqlEventDetailedData appsv1.StatefulSet
+		// 			if err := r.Get(ctx, client.ObjectKey{
+		// 				Namespace: req.Namespace,
+		// 				Name:      "stateful-set-mysql-event-detailed-data",
+		// 			}, &statefulSetMySqlEventDetailedData); err != nil {
+		// 				if !errors.IsNotFound(err) {
+		// 					logger.Error(err, "unable to fetch StatefulSetMySqlEventDetailedData")
+		// 				}
+		// 			}
+		// 			replicasMySqlEventDetailedData := *statefulSetMySqlEventDetailedData.Spec.Replicas
+
+		// 			for i := 0; i < int(replicasMySqlEventDetailedData); i++ {
+		// 				database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-event-detailed-data-%d.headless-service-mysql-event-detailed-data.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
+		// 				database, err := sql.Open("mysql", database_address)
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when connecting to database")
+		// 				}
+		// 				defer database.Close()
+		// 				result, err := database.Query("select count(*) from event;")
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when querying")
+		// 				}
+		// 				result.Next()
+		// 				var rowCount int
+		// 				err = result.Scan(&rowCount)
+		// 				if err != nil {
+		// 					logger.Error(err, "An error occur when getting row count")
+		// 				}
+		// 				fmt.Printf("%d rows in database %d\n", rowCount, i)
+		// 				if rowCount > currentMaxTableSize {
+		// 					fmt.Println("Row count exceeds max value")
+		// 				}
+		// 			}
+
+		// 		case <-quit:
+		// 			fmt.Println("Ticker stopped")
+		// 			return
+		// 		}
+		// 	}
+		// }()
 
 	} else {
 		if autoScaler.DeletionTimestamp != nil && controllerutil.ContainsFinalizer(&autoScaler, finalizerName) {
@@ -203,6 +277,60 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		}
 	}
 	return ctrl.Result{}, nil
+}
+
+func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) int {
+	logger := log.FromContext(ctx)
+	var routingRuleConfigMap corev1.ConfigMap
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "backend-user-routing-hash-generate-springboot-config",
+	}, &routingRuleConfigMap); err == nil {
+		applicationYaml := routingRuleConfigMap.Data["application.yaml"]
+		var applicationYamlMap map[string]interface{}
+		if err := yaml.Unmarshal([]byte(applicationYaml), &applicationYamlMap); err == nil {
+			routingRuleList, _ := applicationYamlMap["routingRuleList"].([]interface{})
+			for indexInList, rule := range routingRuleList {
+				rule, _ := rule.(map[interface{}]interface{})
+				index, _ := rule["index"].(int)
+
+				if index == 0 {
+					startHash, ok1 := rule["startHash"].(int)
+					endHash, ok2 := rule["endHash"].(int)
+					if ok1 && ok2 && endHash-startHash > 1 {
+						midHash := (endHash - startHash) / 2
+
+						splitRule1 := map[string]interface{}{
+							"startHash": startHash,
+							"endHash":   midHash,
+							"index":     0,
+						}
+						splitRule2 := map[string]interface{}{
+							"startHash": midHash,
+							"endHash":   endHash,
+							"index":     2,
+						}
+						routingRuleList = append(routingRuleList[:indexInList], routingRuleList[indexInList+1:]...)
+						routingRuleList = append(routingRuleList, splitRule1, splitRule2)
+						applicationYamlMap["routingRuleList"] = routingRuleList
+						newApplicationYaml, _ := yaml.Marshal(applicationYamlMap)
+						routingRuleConfigMap.Data["application.yaml"] = string(newApplicationYaml)
+						if err := r.Update(ctx, &routingRuleConfigMap); err != nil {
+							logger.Error(err, "unable to update RoutingRuleConfigMap")
+						} else {
+							return midHash
+						}
+					}
+					break
+				}
+			}
+		} else {
+			logger.Error(err, "unable to parse application")
+		}
+	} else {
+		logger.Error(err, "unable to fetch RoutingRuleConfigMap")
+	}
+	return -1
 }
 
 // SetupWithManager sets up the controller with the Manager.
