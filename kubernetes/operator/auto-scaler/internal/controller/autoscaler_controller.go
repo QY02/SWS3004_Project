@@ -41,7 +41,6 @@ import (
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 
 	autoscalerv1 "github.com/qy02/SWS3004_Project/api/v1"
-	// v1 "github.com/qy02/SWS3004_Project/api/v1"
 )
 
 // AutoScalerReconciler reconciles a AutoScaler object
