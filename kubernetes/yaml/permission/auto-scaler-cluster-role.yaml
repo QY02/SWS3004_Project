@@ -4,7 +4,7 @@ metadata:
   name: auto-scaler-stateful-set-reader
 rules:
   - apiGroups: [ "apps" ]
-    resources: [ "statefulsets" ]
+    resources: [ "statefulsets", "deployments" ]
     verbs: [ "get", "list", "watch", "update", "patch" ]
   - apiGroups: [ "" ]
     resources: [ "configmaps", "pods" ]
@@ -12,3 +12,6 @@ rules:
   - apiGroups: [ "" ]
     resources: [ "pods/exec" ]
     verbs: [ "create" ]
+  - apiGroups: [ "gateway.networking.k8s.io" ]
+    resources: [ "httproutes" ]
+    verbs: [ "get", "list", "watch", "update", "patch" ]
