@@ -153,7 +153,7 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							fmt.Println("Row count exceeds max value")
 							ticker.Stop()
 
-							result, err := database.Query("select max(cast(routing_hash as signed)) from user order by cast(routing_hash as signed) limit ?;", rowCount/2)
+							result, err := database.Query("select max(temp.routing_hash) from (select cast(routing_hash as signed) as routing_hash from user order by cast(routing_hash as signed) limit ?) as temp;", rowCount/2)
 							if err != nil {
 								logger.Error(err, "An error occur when querying")
 							}
@@ -163,6 +163,8 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							if err != nil {
 								logger.Error(err, "An error occur when getting mid hash")
 								midHash = -1
+							} else {
+								midHash++
 							}
 							fmt.Printf("midHash = %d\n", midHash)
 
@@ -595,7 +597,7 @@ func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctr
 			},
 		},
 	}
-	if err := r.Create(ctx, &newRegisterService); err != nil {
+	if err := r.Create(ctx, &newRegisterService); client.IgnoreAlreadyExists(err) != nil {
 		logger.Error(err, "unable to create NewRegisterService")
 		return false
 	}
@@ -618,7 +620,7 @@ func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctr
 			},
 		},
 	}
-	if err := r.Create(ctx, &newLoginService); err != nil {
+	if err := r.Create(ctx, &newLoginService); client.IgnoreAlreadyExists(err) != nil {
 		logger.Error(err, "unable to create NewLoginService")
 		return false
 	}
@@ -641,7 +643,7 @@ func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctr
 			},
 		},
 	}
-	if err := r.Create(ctx, &newOrderRecordService); err != nil {
+	if err := r.Create(ctx, &newOrderRecordService); client.IgnoreAlreadyExists(err) != nil {
 		logger.Error(err, "unable to create NewOrderRecordService")
 		return false
 	}
@@ -664,7 +666,7 @@ func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctr
 			},
 		},
 	}
-	if err := r.Create(ctx, &newTokenVerificationService); err != nil {
+	if err := r.Create(ctx, &newTokenVerificationService); client.IgnoreAlreadyExists(err) != nil {
 		logger.Error(err, "unable to create NewTokenVerificationService")
 		return false
 	}
