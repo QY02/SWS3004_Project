@@ -29,6 +29,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -564,69 +565,93 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 
 func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, newPodIndex int32) bool {
 	logger := log.FromContext(ctx)
-	var registerService corev1.Service
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: req.Namespace,
-		Name:      "cluster-ip-service-register-0",
-	}, &registerService); err != nil {
-		logger.Error(err, "unable to fetch RegisterService")
-		return false
+	newRegisterService := corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: req.Namespace,
+			Name:      fmt.Sprintf("cluster-ip-service-register-%d", newPodIndex),
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"backend":                      "register",
+				"apps.kubernetes.io/pod-index": fmt.Sprintf("%d", newPodIndex),
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Port: 25561,
+				},
+			},
+		},
 	}
-	newRegisterService := registerService.DeepCopy()
-	newRegisterService.Name = fmt.Sprintf("cluster-ip-service-register-%d", newPodIndex)
-	newRegisterService.Spec.Selector["apps.kubernetes.io/pod-index"] = fmt.Sprintf("%d", newPodIndex)
-	if err := r.Create(ctx, newRegisterService); err != nil {
+	if err := r.Create(ctx, &newRegisterService); err != nil {
 		logger.Error(err, "unable to create NewRegisterService")
 		return false
 	}
 	fmt.Println("Create NewRegisterService success")
 
-	var loginService corev1.Service
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: req.Namespace,
-		Name:      "cluster-ip-service-login-0",
-	}, &loginService); err != nil {
-		logger.Error(err, "unable to fetch LoginService")
-		return false
+	newLoginService := corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: req.Namespace,
+			Name:      fmt.Sprintf("cluster-ip-service-login-%d", newPodIndex),
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"backend":                      "login",
+				"apps.kubernetes.io/pod-index": fmt.Sprintf("%d", newPodIndex),
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Port: 25560,
+				},
+			},
+		},
 	}
-	newLoginService := loginService.DeepCopy()
-	newLoginService.Name = fmt.Sprintf("cluster-ip-service-login-%d", newPodIndex)
-	newLoginService.Spec.Selector["apps.kubernetes.io/pod-index"] = fmt.Sprintf("%d", newPodIndex)
-	if err := r.Create(ctx, newLoginService); err != nil {
+	if err := r.Create(ctx, &newLoginService); err != nil {
 		logger.Error(err, "unable to create NewLoginService")
 		return false
 	}
 	fmt.Println("Create NewLoginService success")
 
-	var orderRecordService corev1.Service
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: req.Namespace,
-		Name:      "cluster-ip-service-order-record-0",
-	}, &orderRecordService); err != nil {
-		logger.Error(err, "unable to fetch OrderRecordService")
-		return false
+	newOrderRecordService := corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: req.Namespace,
+			Name:      fmt.Sprintf("cluster-ip-service-order-record-%d", newPodIndex),
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"backend":                      "order-record",
+				"apps.kubernetes.io/pod-index": fmt.Sprintf("%d", newPodIndex),
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Port: 25566,
+				},
+			},
+		},
 	}
-	newOrderRecordService := orderRecordService.DeepCopy()
-	newOrderRecordService.Name = fmt.Sprintf("cluster-ip-service-order-record-%d", newPodIndex)
-	newOrderRecordService.Spec.Selector["apps.kubernetes.io/pod-index"] = fmt.Sprintf("%d", newPodIndex)
-	if err := r.Create(ctx, newOrderRecordService); err != nil {
+	if err := r.Create(ctx, &newOrderRecordService); err != nil {
 		logger.Error(err, "unable to create NewOrderRecordService")
 		return false
 	}
 	fmt.Println("Create NewOrderRecordService success")
 
-	var tokenVerificationService corev1.Service
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: req.Namespace,
-		Name:      "cluster-ip-service-token-verification-0",
-	}, &tokenVerificationService); err != nil {
-		logger.Error(err, "unable to fetch TokenVerificationService")
-		return false
+	newTokenVerificationService := corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: req.Namespace,
+			Name:      fmt.Sprintf("cluster-ip-service-token-verification-%d", newPodIndex),
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"backend":                      "token-verification",
+				"apps.kubernetes.io/pod-index": fmt.Sprintf("%d", newPodIndex),
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Port: 25562,
+				},
+			},
+		},
 	}
-	newTokenVerificationService := tokenVerificationService.DeepCopy()
-	newTokenVerificationService.Name = fmt.Sprintf("cluster-ip-service-token-verification-%d", newPodIndex)
-	newTokenVerificationService.Spec.Selector["apps.kubernetes.io/pod-index"] = fmt.Sprintf("%d", newPodIndex)
-	if err := r.Create(ctx, newTokenVerificationService); err != nil {
+	if err := r.Create(ctx, &newTokenVerificationService); err != nil {
 		logger.Error(err, "unable to create NewTokenVerificationService")
 		return false
 	}
