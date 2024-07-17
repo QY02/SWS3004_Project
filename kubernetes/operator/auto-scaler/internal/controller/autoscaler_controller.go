@@ -181,42 +181,6 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 						}
 					}
 
-					fmt.Println("Scanning databases for event detailed data")
-
-					var statefulSetMySqlEventDetailedData appsv1.StatefulSet
-					if err := r.Get(ctx, client.ObjectKey{
-						Namespace: req.Namespace,
-						Name:      "stateful-set-mysql-event-detailed-data",
-					}, &statefulSetMySqlEventDetailedData); err != nil {
-						if !errors.IsNotFound(err) {
-							logger.Error(err, "unable to fetch StatefulSetMySqlEventDetailedData")
-						}
-					}
-					replicasMySqlEventDetailedData := *statefulSetMySqlEventDetailedData.Spec.Replicas
-
-					for i := 0; i < int(replicasMySqlEventDetailedData); i++ {
-						database_address := fmt.Sprintf("root:madoh1#786gd$28q9asf@tcp(stateful-set-mysql-event-detailed-data-%d.headless-service-mysql-event-detailed-data.nus-cloud-project.svc.cluster.local:3306)/nus_cloud_project", i)
-						database, err := sql.Open("mysql", database_address)
-						if err != nil {
-							logger.Error(err, "An error occur when connecting to database")
-						}
-						defer database.Close()
-						result, err := database.Query("select count(*) from event;")
-						if err != nil {
-							logger.Error(err, "An error occur when querying")
-						}
-						result.Next()
-						var rowCount int
-						err = result.Scan(&rowCount)
-						if err != nil {
-							logger.Error(err, "An error occur when getting row count")
-						}
-						fmt.Printf("%d rows in database %d\n", rowCount, i)
-						if rowCount > currentMaxTableSize {
-							fmt.Println("Row count exceeds max value")
-						}
-					}
-
 				case <-quit:
 					fmt.Println("Ticker stopped")
 					return
@@ -274,7 +238,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 		if err := r.Update(ctx, &statefulSetMySqlUser); err == nil {
 			var newPodMySqlUser corev1.Pod
 			newPodMySqlUserReady := false
-			for j := 0; j < 300; j++ {
+			for j := 0; j < 30; j++ {
 				if err := r.Get(ctx, client.ObjectKey{
 					Namespace: req.Namespace,
 					Name:      fmt.Sprintf("stateful-set-mysql-user-%d", newPodMySqlUserIndex),
@@ -426,7 +390,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		logger.Error(err, "cannot create client instance")
 		return false
 	}
-	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && redis-cli DEBUG RELOAD", indexToSplit, indexToSplit)}
+	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb", indexToSplit, indexToSplit)}
 	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
 		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
@@ -458,6 +422,20 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	fmt.Println("Copy redis data success")
 	fmt.Println("Command std out: " + commandStdout.String())
 	fmt.Println("Command std err: " + commandStderr.String())
+
+    fmt.Println("Restarting newPodRedis")
+    if err := r.Get(ctx, client.ObjectKey{
+        Namespace: req.Namespace,
+        Name:      fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex),
+    }, &newPodRedis); err != nil {
+        logger.Error(err, "unable to fetch NewPodRedis")
+        return false
+    }
+    if err := r.Delete(ctx, &statefulSetRedis); err != nil {
+        logger.Error(err, "unable to delete NewPodRedis to restart it")
+    }
+    fmt.Println("Delete NewPodRedis success, NewPodRedis will be recreated automatically")
+
 	return true
 }
 
