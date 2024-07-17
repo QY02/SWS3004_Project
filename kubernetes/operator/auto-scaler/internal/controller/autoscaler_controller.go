@@ -168,14 +168,14 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							}
 							fmt.Printf("midHash = %d\n", midHash)
 
-							createResult := createNewUserDatabase(ctx, r, req)
+							createResult, rollBack := createNewUserDatabase(ctx, r, req)
 
-							if createResult {
-								createResult = createNewUserRedis(ctx, r, req, i)
+							if createResult || rollBack {
+								createResult, rollBack = createNewUserRedis(ctx, r, req, rollBack, i)
 							}
 
-							if createResult {
-								createResult = createNewUserMicroservices(ctx, r, req)
+							if createResult || rollBack {
+								createResult, rollBack = createNewUserMicroservices(ctx, r, req, rollBack)
 							}
 
 							if createResult {
@@ -191,7 +191,7 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							}
 
 							if createResult {
-								startHash, endHash := splitRoutingRule(ctx, r, req, i, midHash)
+								startHash, endHash := splitRoutingRule(ctx, r, req, i, currentReplica, midHash)
 								fmt.Printf("startHash = %d, midHash = %d, endHash = %d\n", startHash, midHash, endHash)
 
 								if (startHash != -1) && (midHash != -1) && (endHash != -1) {
@@ -243,7 +243,7 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	return ctrl.Result{}, nil
 }
 
-func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) bool {
+func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) (bool, bool) {
 	logger := log.FromContext(ctx)
 	var statefulSetMySqlUser appsv1.StatefulSet
 	if err := r.Get(ctx, client.ObjectKey{
@@ -259,7 +259,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 			} else {
 				logger.Error(err, "Fail to roll back")
 			}
-			return false
+			return false, true
 		}
 		replicasMySqlUser++
 		statefulSetMySqlUser.Spec.Replicas = &replicasMySqlUser
@@ -304,7 +304,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 					}
 					if newDatabaseReady {
 						fmt.Println("Create new user database Success")
-						return true
+						return true, false
 					} else {
 						fmt.Println("NewDatabase start timeout")
 					}
@@ -336,10 +336,10 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 			logger.Error(err, "unable to fetch StatefulSetMySqlUser")
 		}
 	}
-	return false
+	return false, false
 }
 
-func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int) bool {
+func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, rollBack bool, indexToSplit int) (bool, bool) {
 	logger := log.FromContext(ctx)
 	var statefulSetRedis appsv1.StatefulSet
 	if err := r.Get(ctx, client.ObjectKey{
@@ -349,10 +349,10 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		if !errors.IsNotFound(err) {
 			logger.Error(err, "unable to fetch StatefulSetRedis")
 		}
-		return false
+		return false, rollBack
 	}
 	replicasRedis := *statefulSetRedis.Spec.Replicas
-	if replicasRedis != currentReplica {
+	if rollBack || (replicasRedis != currentReplica) {
 		fmt.Println("Replicas is inconsistent, try to roll back")
 		statefulSetRedis.Spec.Replicas = &currentReplica
 		if err := r.Update(ctx, &statefulSetRedis); err == nil {
@@ -360,14 +360,14 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		} else {
 			logger.Error(err, "Fail to roll back")
 		}
-		return false
+		return false, true
 	}
 	replicasRedis++
 	statefulSetRedis.Spec.Replicas = &replicasRedis
 	newPodRedisIndex := replicasRedis - 1
 	if err := r.Update(ctx, &statefulSetRedis); err != nil {
 		logger.Error(err, "unable to update StatefulSetRedis")
-		return false
+		return false, false
 	}
 	var newPodRedis corev1.Pod
 	newPodRedisReady := false
@@ -408,17 +408,17 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		} else {
 			logger.Error(err, "Fail to roll back StatefulSetRedis")
 		}
-		return false
+		return false, false
 	}
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		logger.Error(err, "cannot get in cluster config")
-		return false
+		return false, false
 	}
 	clientInstance, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		logger.Error(err, "cannot create client instance")
-		return false
+		return false, false
 	}
 	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && (redis-cli shutdown nosave || true)", indexToSplit, indexToSplit)}
 	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
@@ -434,7 +434,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	executor, err := remotecommand.NewSPDYExecutor(config, "POST", apiRequest.URL())
 	if err != nil {
 		logger.Error(err, "cannot create connection")
-		return false
+		return false, false
 	}
 	var commandStdout bytes.Buffer
 	var commandStderr bytes.Buffer
@@ -447,10 +447,10 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	fmt.Println("Command std out: " + commandStdout.String())
 	fmt.Println("Command std err: " + commandStderr.String())
 
-	return true
+	return true, false
 }
 
-func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) bool {
+func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, rollBack bool) (bool, bool) {
 	logger := log.FromContext(ctx)
 	var statefulSetRegister appsv1.StatefulSet
 	if err := r.Get(ctx, client.ObjectKey{
@@ -466,7 +466,7 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			} else {
 				logger.Error(err, "Fail to roll back")
 			}
-			return false
+			return false, true
 		}
 		replicasRegister++
 		statefulSetRegister.Spec.Replicas = &replicasRegister
@@ -474,12 +474,12 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			fmt.Println("Increase replica for register success")
 		} else {
 			logger.Error(err, "unable to update StatefulSetRegister")
-			return false
+			return false, false
 		}
 	} else {
 		if !errors.IsNotFound(err) {
 			logger.Error(err, "unable to fetch StatefulSetRegister")
-			return false
+			return false, rollBack
 		}
 	}
 
@@ -497,7 +497,7 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			} else {
 				logger.Error(err, "Fail to roll back")
 			}
-			return false
+			return false, true
 		}
 		replicasLogin++
 		statefulSetLogin.Spec.Replicas = &replicasLogin
@@ -505,12 +505,12 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			fmt.Println("Increase replica for login success")
 		} else {
 			logger.Error(err, "unable to update StatefulSetLogin")
-			return false
+			return false, false
 		}
 	} else {
 		if !errors.IsNotFound(err) {
 			logger.Error(err, "unable to fetch StatefulSetLogin")
-			return false
+			return false, rollBack
 		}
 	}
 
@@ -528,7 +528,7 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			} else {
 				logger.Error(err, "Fail to roll back")
 			}
-			return false
+			return false, true
 		}
 		replicasOrderRecord++
 		statefulSetOrderRecord.Spec.Replicas = &replicasOrderRecord
@@ -536,12 +536,12 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			fmt.Println("Increase replica for order record success")
 		} else {
 			logger.Error(err, "unable to update StatefulSetOrderRecord")
-			return false
+			return false, false
 		}
 	} else {
 		if !errors.IsNotFound(err) {
 			logger.Error(err, "unable to fetch StatefulSetOrderRecord")
-			return false
+			return false, rollBack
 		}
 	}
 
@@ -559,7 +559,7 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			} else {
 				logger.Error(err, "Fail to roll back")
 			}
-			return false
+			return false, true
 		}
 		replicasTokenVerification++
 		statefulSetTokenVerification.Spec.Replicas = &replicasTokenVerification
@@ -567,15 +567,15 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			fmt.Println("Increase replica for token verification success")
 		} else {
 			logger.Error(err, "unable to update StatefulSetTokenVerification")
-			return false
+			return false, false
 		}
 	} else {
 		if !errors.IsNotFound(err) {
 			logger.Error(err, "unable to fetch StatefulSetTokenVerification")
-			return false
+			return false, rollBack
 		}
 	}
-	return true
+	return true, false
 }
 
 func createNewUserServices(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, newPodIndex int32) bool {
@@ -934,7 +934,7 @@ func cleanUpData(ctx context.Context, indexToSplit int, newPodMySqlUserIndex int
 	}
 }
 
-func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int, midHash int) (int, int) {
+func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int, newPodIndex int32, midHash int) (int, int) {
 	logger := log.FromContext(ctx)
 	var routingRuleConfigMap corev1.ConfigMap
 	if err := r.Get(ctx, client.ObjectKey{
@@ -956,12 +956,12 @@ func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Req
 						splitRule1 := map[string]interface{}{
 							"startHash": startHash,
 							"endHash":   midHash,
-							"index":     0,
+							"index":     indexToSplit,
 						}
 						splitRule2 := map[string]interface{}{
 							"startHash": midHash,
 							"endHash":   endHash,
-							"index":     2,
+							"index":     newPodIndex,
 						}
 						routingRuleList = append(routingRuleList[:indexInList], routingRuleList[indexInList+1:]...)
 						routingRuleList = append(routingRuleList, splitRule1, splitRule2)
