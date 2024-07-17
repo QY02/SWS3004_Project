@@ -153,7 +153,7 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							fmt.Println("Row count exceeds max value")
 							ticker.Stop()
 
-							result, err := database.Query("select cast(routing_hash as signed) from user order by cast(routing_hash as signed) limit ?;", rowCount/2)
+							result, err := database.Query("select max(cast(routing_hash as signed)) from user order by cast(routing_hash as signed) limit ?;", rowCount/2)
 							if err != nil {
 								logger.Error(err, "An error occur when querying")
 							}
