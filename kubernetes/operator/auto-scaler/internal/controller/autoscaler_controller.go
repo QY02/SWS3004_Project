@@ -156,6 +156,14 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 							createResult := createNewUserDatabase(ctx, r, req)
 
+                            if createResult {
+                                createResult = createNewUserRedis(ctx, r, req, i)
+                            }
+
+                            if createResult {
+                                createResult = createNewUserMicroservices(ctx, r, req)
+                            }
+
 							if createResult {
 								startHash, midHash, endHash := splitRoutingRule(ctx, r, req, i)
 								fmt.Printf("startHash = %d, midHash = %d, endHash = %d\n", startHash, midHash, endHash)
@@ -335,6 +343,250 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 		}
 	}
 	return false
+}
+
+func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int) bool {
+	logger := log.FromContext(ctx)
+	var statefulSetRedis appsv1.StatefulSet
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "stateful-set-mysql-redis",
+	}, &statefulSetRedis); err != nil {
+		if !errors.IsNotFound(err) {
+			logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+		}
+		return false
+	}
+	replicasRedis := *statefulSetRedis.Spec.Replicas
+	if replicasRedis != currentReplica {
+		fmt.Println("Replicas is inconsistent, try to roll back")
+		statefulSetRedis.Spec.Replicas = &currentReplica
+		if err := r.Update(ctx, &statefulSetRedis); err == nil {
+			fmt.Println("Roll back success")
+		} else {
+			logger.Error(err, "Fail to roll back")
+		}
+		return false
+	}
+	replicasRedis++
+	statefulSetRedis.Spec.Replicas = &replicasRedis
+	newPodRedisIndex := replicasRedis - 1
+	if err := r.Update(ctx, &statefulSetRedis); err != nil {
+		logger.Error(err, "unable to update StatefulSetMySqlUser")
+		return false
+	}
+	var newPodRedis corev1.Pod
+	newPodRedisReady := false
+	for j := 0; j < 30; j++ {
+		if err := r.Get(ctx, client.ObjectKey{
+			Namespace: req.Namespace,
+			Name:      fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex),
+		}, &newPodRedis); err == nil {
+			for _, condition := range newPodRedis.Status.Conditions {
+				if condition.Type == corev1.PodReady {
+					if condition.Status == corev1.ConditionTrue {
+						newPodRedisReady = true
+					}
+					break
+				}
+			}
+			if newPodRedisReady {
+				break
+			}
+		} else {
+			logger.Error(err, "unable to fetch NewPodRedis")
+		}
+		time.Sleep(5 * time.Second)
+	}
+	if !newPodRedisReady {
+		fmt.Println("NewPodRedis start timeout")
+		if err := r.Get(ctx, client.ObjectKey{
+			Namespace: req.Namespace,
+			Name:      "stateful-set-redis",
+		}, &statefulSetRedis); err == nil {
+			replicasRedis--
+			statefulSetRedis.Spec.Replicas = &replicasRedis
+			if err := r.Update(ctx, &statefulSetRedis); err == nil {
+				fmt.Println("StatefulSetRedis roll back success")
+			} else {
+				logger.Error(err, "Fail to roll back StatefulSetRedis")
+			}
+		} else {
+			logger.Error(err, "Fail to roll back StatefulSetRedis")
+		}
+		return false
+	}
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		logger.Error(err, "cannot get in cluster config")
+		return false
+	}
+	clientInstance, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		logger.Error(err, "cannot create client instance")
+		return false
+	}
+	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && redis-cli DEBUG RELOAD", indexToSplit, indexToSplit)}
+	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
+		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Command:   command,
+			Container: "events-center-redis",
+			Stdin:     false,
+			Stdout:    true,
+			Stderr:    true,
+			TTY:       false,
+		}, scheme.ParameterCodec)
+	executor, err := remotecommand.NewSPDYExecutor(config, "POST", apiRequest.URL())
+	if  err != nil {
+		logger.Error(err, "cannot create connection")
+		return false
+	}
+	var commandStdout bytes.Buffer
+	var commandStderr bytes.Buffer
+	err = executor.StreamWithContext(ctx, remotecommand.StreamOptions{
+		Stdout: &commandStdout,
+		Stderr: &commandStderr,
+		Tty:    false,
+	})
+	if err != nil {
+		logger.Error(err, "command execution failed")
+		fmt.Println("Command std out: " + commandStdout.String())
+		fmt.Println("Command std err: " + commandStderr.String())
+		return false
+	}
+	fmt.Println("Copy redis data success")
+	fmt.Println("Command std out: " + commandStdout.String())
+	fmt.Println("Command std err: " + commandStderr.String())
+	return true
+}
+
+func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) bool {
+	logger := log.FromContext(ctx)
+	var statefulSetRegister appsv1.StatefulSet
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "stateful-set-register",
+	}, &statefulSetRegister); err == nil {
+		replicasRegister := *statefulSetRegister.Spec.Replicas
+		if replicasRegister != currentReplica {
+			fmt.Println("Replicas is inconsistent, try to roll back")
+			statefulSetRegister.Spec.Replicas = &currentReplica
+			if err := r.Update(ctx, &statefulSetRegister); err == nil {
+				fmt.Println("Roll back success")
+			} else {
+				logger.Error(err, "Fail to roll back")
+			}
+			return false
+		}
+		replicasRegister++
+		statefulSetRegister.Spec.Replicas = &replicasRegister
+		if err := r.Update(ctx, &statefulSetRegister); err == nil {
+			fmt.Println("Increase replica for register success")
+		} else {
+			logger.Error(err, "unable to update StatefulSetRegister")
+			return false
+		}
+	} else {
+		if !errors.IsNotFound(err) {
+			logger.Error(err, "unable to fetch StatefulSetRegister")
+			return false
+		}
+	}
+
+	var statefulSetLogin appsv1.StatefulSet
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "stateful-set-login",
+	}, &statefulSetLogin); err == nil {
+		replicasLogin := *statefulSetLogin.Spec.Replicas
+		if replicasLogin != currentReplica {
+			fmt.Println("Replicas is inconsistent, try to roll back")
+			statefulSetLogin.Spec.Replicas = &currentReplica
+			if err := r.Update(ctx, &statefulSetLogin); err == nil {
+				fmt.Println("Roll back success")
+			} else {
+				logger.Error(err, "Fail to roll back")
+			}
+			return false
+		}
+		replicasLogin++
+		statefulSetLogin.Spec.Replicas = &replicasLogin
+		if err := r.Update(ctx, &statefulSetLogin); err == nil {
+			fmt.Println("Increase replica for login success")
+		} else {
+			logger.Error(err, "unable to update StatefulSetLogin")
+			return false
+		}
+	} else {
+		if !errors.IsNotFound(err) {
+			logger.Error(err, "unable to fetch StatefulSetLogin")
+			return false
+		}
+	}
+
+	var statefulSetOrderRecord appsv1.StatefulSet
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "stateful-set-order-record",
+	}, &statefulSetOrderRecord); err == nil {
+		replicasOrderRecord := *statefulSetOrderRecord.Spec.Replicas
+		if replicasOrderRecord != currentReplica {
+			fmt.Println("Replicas is inconsistent, try to roll back")
+			statefulSetOrderRecord.Spec.Replicas = &currentReplica
+			if err := r.Update(ctx, &statefulSetOrderRecord); err == nil {
+				fmt.Println("Roll back success")
+			} else {
+				logger.Error(err, "Fail to roll back")
+			}
+			return false
+		}
+		replicasOrderRecord++
+		statefulSetOrderRecord.Spec.Replicas = &replicasOrderRecord
+		if err := r.Update(ctx, &statefulSetOrderRecord); err == nil {
+			fmt.Println("Increase replica for order record success")
+		} else {
+			logger.Error(err, "unable to update StatefulSetOrderRecord")
+			return false
+		}
+	} else {
+		if !errors.IsNotFound(err) {
+			logger.Error(err, "unable to fetch StatefulSetOrderRecord")
+			return false
+		}
+	}
+
+	var statefulSetTokenVerification appsv1.StatefulSet
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "stateful-set-token-verification",
+	}, &statefulSetTokenVerification); err == nil {
+		replicasTokenVerification := *statefulSetTokenVerification.Spec.Replicas
+		if replicasTokenVerification != currentReplica {
+			fmt.Println("Replicas is inconsistent, try to roll back")
+			statefulSetTokenVerification.Spec.Replicas = &currentReplica
+			if err := r.Update(ctx, &statefulSetTokenVerification); err == nil {
+				fmt.Println("Roll back success")
+			} else {
+				logger.Error(err, "Fail to roll back")
+			}
+			return false
+		}
+		replicasTokenVerification++
+		statefulSetTokenVerification.Spec.Replicas = &replicasTokenVerification
+		if err := r.Update(ctx, &statefulSetTokenVerification); err == nil {
+			fmt.Println("Increase replica for token verification success")
+		} else {
+			logger.Error(err, "unable to update StatefulSetTokenVerification")
+			return false
+		}
+	} else {
+		if !errors.IsNotFound(err) {
+			logger.Error(err, "unable to fetch StatefulSetTokenVerification")
+			return false
+		}
+	}
+	return true
 }
 
 func copyData(ctx context.Context, indexToSplit int, req ctrl.Request, newPodMySqlUserIndex int32, startHash int, midHash int, endHash int) bool {
