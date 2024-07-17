@@ -402,7 +402,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		logger.Error(err, "cannot create client instance")
 		return false
 	}
-	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && (redis-cli shutdown nosave || true)", indexToSplit, indexToSplit)}
+	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb", indexToSplit, indexToSplit)}
 	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
 		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
@@ -434,6 +434,31 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	fmt.Println("Copy redis data success")
 	fmt.Println("Command std out: " + commandStdout.String())
 	fmt.Println("Command std err: " + commandStderr.String())
+
+	fmt.Println("Start loading data into new redis")
+	command = []string{"/bin/sh", "-c", "redis-cli shutdown nosave"}
+	apiRequest = clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
+		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Command:   command,
+			Container: "events-center-redis",
+			Stdin:     false,
+			Stdout:    true,
+			Stderr:    true,
+			TTY:       false,
+		}, scheme.ParameterCodec)
+	executor, err = remotecommand.NewSPDYExecutor(config, "POST", apiRequest.URL())
+	if err != nil {
+		logger.Error(err, "cannot create connection")
+		return false
+	}
+	executor.StreamWithContext(ctx, remotecommand.StreamOptions{
+		Stdout: nil,
+		Stderr: nil,
+		Tty:    false,
+	})
+
+	fmt.Println("Data loading success")
 
 	return true
 }
