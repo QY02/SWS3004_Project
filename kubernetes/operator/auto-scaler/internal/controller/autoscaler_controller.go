@@ -452,7 +452,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		logger.Error(err, "cannot create connection")
 		return false
 	}
-	executor.StreamWithContext(ctx, remotecommand.StreamOptions{
+	_ = executor.StreamWithContext(ctx, remotecommand.StreamOptions{
 		Stdout: nil,
 		Stderr: nil,
 		Tty:    false,
