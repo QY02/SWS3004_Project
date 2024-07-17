@@ -390,7 +390,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		logger.Error(err, "cannot create client instance")
 		return false
 	}
-	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb", indexToSplit, indexToSplit)}
+	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && redis-cli shutdown nosave", indexToSplit, indexToSplit)}
 	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
 		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
@@ -422,19 +422,6 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	fmt.Println("Copy redis data success")
 	fmt.Println("Command std out: " + commandStdout.String())
 	fmt.Println("Command std err: " + commandStderr.String())
-
-    fmt.Println("Restarting newPodRedis")
-    if err := r.Get(ctx, client.ObjectKey{
-        Namespace: req.Namespace,
-        Name:      fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex),
-    }, &newPodRedis); err != nil {
-        logger.Error(err, "unable to fetch NewPodRedis")
-        return false
-    }
-    if err := r.Delete(ctx, &statefulSetRedis); err != nil {
-        logger.Error(err, "unable to delete NewPodRedis to restart it")
-    }
-    fmt.Println("Delete NewPodRedis success, NewPodRedis will be recreated automatically")
 
 	return true
 }
