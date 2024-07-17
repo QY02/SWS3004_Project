@@ -38,6 +38,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 
 	autoscalerv1 "github.com/qy02/SWS3004_Project/api/v1"
 	// v1 "github.com/qy02/SWS3004_Project/api/v1"
@@ -156,13 +157,21 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 							createResult := createNewUserDatabase(ctx, r, req)
 
-                            if createResult {
-                                createResult = createNewUserRedis(ctx, r, req, i)
-                            }
+							if createResult {
+								createResult = createNewUserRedis(ctx, r, req, i)
+							}
 
-                            if createResult {
-                                createResult = createNewUserMicroservices(ctx, r, req)
-                            }
+							if createResult {
+								createResult = createNewUserMicroservices(ctx, r, req)
+							}
+
+							if createResult {
+								createResult = createNewRulesInUserHttpRoute(ctx, r, req, currentReplica)
+							}
+
+							if createResult {
+								createResult = createNewRulesInEventHttpRoute(ctx, r, req, currentReplica)
+							}
 
 							if createResult {
 								startHash, midHash, endHash := splitRoutingRule(ctx, r, req, i)
@@ -402,7 +411,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 			TTY:       false,
 		}, scheme.ParameterCodec)
 	executor, err := remotecommand.NewSPDYExecutor(config, "POST", apiRequest.URL())
-	if  err != nil {
+	if err != nil {
 		logger.Error(err, "cannot create connection")
 		return false
 	}
@@ -551,6 +560,162 @@ func createNewUserMicroservices(ctx context.Context, r *AutoScalerReconciler, re
 			return false
 		}
 	}
+	return true
+}
+
+func createNewRulesInUserHttpRoute(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, newPodMySqlUserIndex int32) bool {
+	logger := log.FromContext(ctx)
+	var userHttpRules gatewayv1.HTTPRoute
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "http-route-user",
+	}, &userHttpRules); err != nil {
+		logger.Error(err, "unable to fetch UserHttpRules")
+		return false
+	}
+
+	newRuleList := []gatewayv1.HTTPRouteRule{
+		{
+			Matches: []gatewayv1.HTTPRouteMatch{
+				{
+					Path: &gatewayv1.HTTPPathMatch{
+						Type:  createPointer(gatewayv1.PathMatchPathPrefix),
+						Value: createPointer("/register"),
+					},
+					Headers: []gatewayv1.HTTPHeaderMatch{
+						{
+							Type:  createPointer(gatewayv1.HeaderMatchExact),
+							Name:  gatewayv1.HTTPHeaderName("routingIndex"),
+							Value: fmt.Sprintf("%d", newPodMySqlUserIndex),
+						},
+					},
+				},
+			},
+			BackendRefs: []gatewayv1.HTTPBackendRef{
+				{
+					BackendRef: gatewayv1.BackendRef{
+						BackendObjectReference: gatewayv1.BackendObjectReference{
+							Name: gatewayv1.ObjectName(fmt.Sprintf("cluster-ip-service-register-%d", newPodMySqlUserIndex)),
+							Port: createPointer(gatewayv1.PortNumber(25561)),
+						},
+					},
+				},
+			},
+		},
+		{
+			Matches: []gatewayv1.HTTPRouteMatch{
+				{
+					Path: &gatewayv1.HTTPPathMatch{
+						Type:  createPointer(gatewayv1.PathMatchPathPrefix),
+						Value: createPointer("/login"),
+					},
+					Headers: []gatewayv1.HTTPHeaderMatch{
+						{
+							Type:  createPointer(gatewayv1.HeaderMatchExact),
+							Name:  gatewayv1.HTTPHeaderName("routingIndex"),
+							Value: fmt.Sprintf("%d", newPodMySqlUserIndex),
+						},
+					},
+				},
+			},
+			BackendRefs: []gatewayv1.HTTPBackendRef{
+				{
+					BackendRef: gatewayv1.BackendRef{
+						BackendObjectReference: gatewayv1.BackendObjectReference{
+							Name: gatewayv1.ObjectName(fmt.Sprintf("cluster-ip-service-login-%d", newPodMySqlUserIndex)),
+							Port: createPointer(gatewayv1.PortNumber(25560)),
+						},
+					},
+				},
+			},
+		},
+		{
+			Matches: []gatewayv1.HTTPRouteMatch{
+				{
+					Path: &gatewayv1.HTTPPathMatch{
+						Type:  createPointer(gatewayv1.PathMatchPathPrefix),
+						Value: createPointer("/"),
+					},
+					Headers: []gatewayv1.HTTPHeaderMatch{
+						{
+							Type:  createPointer(gatewayv1.HeaderMatchExact),
+							Name:  gatewayv1.HTTPHeaderName("routingIndex"),
+							Value: fmt.Sprintf("%d", newPodMySqlUserIndex),
+						},
+					},
+				},
+			},
+			BackendRefs: []gatewayv1.HTTPBackendRef{
+				{
+					BackendRef: gatewayv1.BackendRef{
+						BackendObjectReference: gatewayv1.BackendObjectReference{
+							Name: gatewayv1.ObjectName(fmt.Sprintf("cluster-ip-service-token-verification-%d", newPodMySqlUserIndex)),
+							Port: createPointer(gatewayv1.PortNumber(25562)),
+						},
+					},
+				},
+			},
+		},
+	}
+
+	userHttpRules.Spec.Rules = append(userHttpRules.Spec.Rules, newRuleList...)
+
+	if err := r.Update(ctx, &userHttpRules); err != nil {
+		logger.Error(err, "unable to update UserHttpRules")
+		return false
+	}
+
+	return true
+}
+
+func createNewRulesInEventHttpRoute(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, newPodMySqlUserIndex int32) bool {
+	logger := log.FromContext(ctx)
+	var eventHttpRules gatewayv1.HTTPRoute
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "http-route-event",
+	}, &eventHttpRules); err != nil {
+		logger.Error(err, "unable to fetch EventHttpRules")
+		return false
+	}
+
+	newRuleList := []gatewayv1.HTTPRouteRule{
+		{
+			Matches: []gatewayv1.HTTPRouteMatch{
+				{
+					Path: &gatewayv1.HTTPPathMatch{
+						Type:  createPointer(gatewayv1.PathMatchPathPrefix),
+						Value: createPointer("/orderRecord"),
+					},
+					Headers: []gatewayv1.HTTPHeaderMatch{
+						{
+							Type:  createPointer(gatewayv1.HeaderMatchExact),
+							Name:  gatewayv1.HTTPHeaderName("routingIndex"),
+							Value: fmt.Sprintf("%d", newPodMySqlUserIndex),
+						},
+					},
+				},
+			},
+			BackendRefs: []gatewayv1.HTTPBackendRef{
+				{
+					BackendRef: gatewayv1.BackendRef{
+						BackendObjectReference: gatewayv1.BackendObjectReference{
+							Name: gatewayv1.ObjectName(fmt.Sprintf("cluster-ip-service-order-record-%d", newPodMySqlUserIndex)),
+							Port: createPointer(gatewayv1.PortNumber(25566)),
+						},
+					},
+				},
+			},
+		},
+	}
+
+	eventHttpRules.Spec.Rules = append(eventHttpRules.Spec.Rules, newRuleList...)
+
+	if err := r.Update(ctx, &eventHttpRules); err != nil {
+		logger.Error(err, "unable to update EventHttpRules")
+		return false
+	}
+
 	return true
 }
 
@@ -714,4 +879,8 @@ func (r *AutoScalerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&autoscalerv1.AutoScaler{}).
 		Complete(r)
+}
+
+func createPointer[T any](v T) *T {
+	return &v
 }
