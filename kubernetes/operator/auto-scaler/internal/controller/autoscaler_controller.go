@@ -178,9 +178,12 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 								fmt.Printf("startHash = %d, midHash = %d, endHash = %d\n", startHash, midHash, endHash)
 
 								if (startHash != -1) && (midHash != -1) && (endHash != -1) {
-									copyResult := copyData(ctx, i, req, currentReplica, startHash, midHash, endHash)
-									if copyResult {
-										currentReplica++
+									refreshResult := refreshHashGenerateService(ctx, r, req)
+									if refreshResult {
+										copyResult := copyData(ctx, i, req, currentReplica, startHash, midHash, endHash)
+										if copyResult {
+											currentReplica++
+										}
 									}
 								}
 							}
@@ -872,6 +875,45 @@ func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Req
 		logger.Error(err, "unable to fetch RoutingRuleConfigMap")
 	}
 	return -1, -1, -1
+}
+
+func refreshHashGenerateService(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) bool {
+	logger := log.FromContext(ctx)
+	var deploymentHashGenerate appsv1.Deployment
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "deployment-user-routing-hash-generate",
+	}, &deploymentHashGenerate); err != nil {
+		logger.Error(err, "unable to fetch DeploymentHashGenerate")
+		return false
+	}
+
+	replicasHashGenerate := *deploymentHashGenerate.Spec.Replicas
+
+	deploymentHashGenerate.Spec.Replicas = createPointer(int32(0))
+
+	if err := r.Update(ctx, &deploymentHashGenerate); err != nil {
+		logger.Error(err, "unable to update DeploymentHashGenerate")
+		return false
+	}
+
+	if err := r.Get(ctx, client.ObjectKey{
+		Namespace: req.Namespace,
+		Name:      "deployment-user-routing-hash-generate",
+	}, &deploymentHashGenerate); err != nil {
+		logger.Error(err, "unable to fetch DeploymentHashGenerate")
+		return false
+	}
+
+	deploymentHashGenerate.Spec.Replicas = &replicasHashGenerate
+
+	if err := r.Update(ctx, &deploymentHashGenerate); err != nil {
+		logger.Error(err, "unable to update DeploymentHashGenerate")
+		return false
+	}
+
+	fmt.Println("Refresh hash generate service success")
+	return true
 }
 
 // SetupWithManager sets up the controller with the Manager.
