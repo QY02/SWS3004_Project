@@ -266,7 +266,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 						break
 					}
 				} else {
-					logger.Error(err, "unable to fetch NewPodMySqlUser")
+					fmt.Printf("try %d: unable to fetch NewPodMySqlUser\n", j)
 				}
 				time.Sleep(5 * time.Second)
 			}
@@ -281,6 +281,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 							newDatabaseReady = true
 							break
 						}
+						fmt.Printf("try %d: database is not ready\n", j)
 						time.Sleep(5 * time.Second)
 					}
 					if newDatabaseReady {
@@ -369,7 +370,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 				break
 			}
 		} else {
-			logger.Error(err, "unable to fetch NewPodRedis")
+			fmt.Printf("try %d: unable to fetch NewPodRedis\n", j)
 		}
 		time.Sleep(5 * time.Second)
 	}
@@ -661,6 +662,7 @@ func createNewRulesInUserHttpRoute(ctx context.Context, r *AutoScalerReconciler,
 		return false
 	}
 
+	fmt.Println("Creating new rules in user http route success")
 	return true
 }
 
@@ -712,6 +714,7 @@ func createNewRulesInEventHttpRoute(ctx context.Context, r *AutoScalerReconciler
 		return false
 	}
 
+	fmt.Println("Creating new rules in event http route success")
 	return true
 }
 
@@ -890,23 +893,35 @@ func refreshHashGenerateService(ctx context.Context, r *AutoScalerReconciler, re
 		return false
 	}
 
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: req.Namespace,
-		Name:      "deployment-user-routing-hash-generate",
-	}, &deploymentHashGenerate); err != nil {
-		logger.Error(err, "unable to fetch DeploymentHashGenerate")
-		return false
+	refreshSuccess := false
+	for i := 0; i < 30; i++ {
+		time.Sleep(5 * time.Second)
+		if err := r.Get(ctx, client.ObjectKey{
+			Namespace: req.Namespace,
+			Name:      "deployment-user-routing-hash-generate",
+		}, &deploymentHashGenerate); err != nil {
+			fmt.Printf("try %d: unable to fetch DeploymentHashGenerate\n", i)
+			continue
+		}
+
+		deploymentHashGenerate.Spec.Replicas = &replicasHashGenerate
+
+		if err := r.Update(ctx, &deploymentHashGenerate); err != nil {
+			fmt.Printf("try %d:unable to update DeploymentHashGenerate\n", i)
+			continue
+		}
+
+		refreshSuccess = true
+		break
 	}
 
-	deploymentHashGenerate.Spec.Replicas = &replicasHashGenerate
-
-	if err := r.Update(ctx, &deploymentHashGenerate); err != nil {
-		logger.Error(err, "unable to update DeploymentHashGenerate")
+	if !refreshSuccess {
+		fmt.Println("Unable to refresh hash generate service")
 		return false
+	} else {
+		fmt.Println("Refresh hash generate service success")
+		return true
 	}
-
-	fmt.Println("Refresh hash generate service success")
-	return true
 }
 
 // SetupWithManager sets up the controller with the Manager.
