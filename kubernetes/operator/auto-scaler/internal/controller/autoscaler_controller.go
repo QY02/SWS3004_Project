@@ -309,7 +309,7 @@ func createNewUserDatabase(ctx context.Context, r *AutoScalerReconciler, req ctr
 						time.Sleep(5 * time.Second)
 					}
 					if newDatabaseReady {
-						fmt.Println("Create new user database Successs")
+						fmt.Println("Create new user database Success")
 						return true
 					} else {
 						fmt.Println("NewDatabase start timeout")
@@ -350,10 +350,10 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	var statefulSetRedis appsv1.StatefulSet
 	if err := r.Get(ctx, client.ObjectKey{
 		Namespace: req.Namespace,
-		Name:      "stateful-set-mysql-redis",
+		Name:      "stateful-set-redis",
 	}, &statefulSetRedis); err != nil {
 		if !errors.IsNotFound(err) {
-			logger.Error(err, "unable to fetch StatefulSetMySqlUser")
+			logger.Error(err, "unable to fetch StatefulSetRedis")
 		}
 		return false
 	}
@@ -372,7 +372,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 	statefulSetRedis.Spec.Replicas = &replicasRedis
 	newPodRedisIndex := replicasRedis - 1
 	if err := r.Update(ctx, &statefulSetRedis); err != nil {
-		logger.Error(err, "unable to update StatefulSetMySqlUser")
+		logger.Error(err, "unable to update StatefulSetRedis")
 		return false
 	}
 	var newPodRedis corev1.Pod
