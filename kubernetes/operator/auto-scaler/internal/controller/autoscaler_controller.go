@@ -402,7 +402,7 @@ func createNewUserRedis(ctx context.Context, r *AutoScalerReconciler, req ctrl.R
 		logger.Error(err, "cannot create client instance")
 		return false
 	}
-	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && redis-cli shutdown nosave", indexToSplit, indexToSplit)}
+	command := []string{"/bin/sh", "-c", fmt.Sprintf("redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 SAVE && redis-cli -h stateful-set-redis-%d.headless-service-redis.nus-cloud-project.svc.cluster.local -p 6379 --rdb /data/dump.rdb && (redis-cli shutdown nosave || true)", indexToSplit, indexToSplit)}
 	apiRequest := clientInstance.CoreV1().RESTClient().Post().Resource("pods").Namespace(req.Namespace).
 		Name(fmt.Sprintf("stateful-set-redis-%d", newPodRedisIndex)).SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
