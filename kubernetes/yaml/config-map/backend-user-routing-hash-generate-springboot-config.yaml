@@ -10,14 +10,11 @@ data:
     
     routingRuleList:
       - startHash: 0
-        endHash: 33333333
+        endHash: 50000000
         index: 0
-      - startHash: 33333333
-        endHash: 66666666
-        index: 1
-      - startHash: 66666666
+      - startHash: 50000000
         endHash: 100000000
-        index: 2
+        index: 1
     
     logging:
       file:

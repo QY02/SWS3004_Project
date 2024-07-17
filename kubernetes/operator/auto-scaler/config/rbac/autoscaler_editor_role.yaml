@@ -1,0 +1,31 @@
+# permissions for end users to edit autoscalers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: autoscaler-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: auto-scaler
+    app.kubernetes.io/part-of: auto-scaler
+    app.kubernetes.io/managed-by: kustomize
+  name: autoscaler-editor-role
+rules:
+- apiGroups:
+  - auto-scaler.nus-cloud-project
+  resources:
+  - autoscalers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - auto-scaler.nus-cloud-project
+  resources:
+  - autoscalers/status
+  verbs:
+  - get

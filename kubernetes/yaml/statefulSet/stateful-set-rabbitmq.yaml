@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stateful-set-rabbitmq
+  namespace: nus-cloud-project
+spec:
+  selector:
+    matchLabels:
+      middleware: rabbitmq
+  serviceName: cluster-ip-service-rabbitmq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        middleware: rabbitmq
+    spec:
+      containers:
+        - name: events-center-rabbitmq
+          image: rabbitmq:latest
+          ports:
+            - containerPort: 5672
+              name: amqp
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+            - name: RABBITMQ_DEFAULT_VHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: RABBITMQ_VIRTUAL_HOST
+          volumeMounts:
+            - name: ebs-storage-rabbitmq
+              mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+    - metadata:
+        name: ebs-storage-rabbitmq
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "ebs-sc"
+        resources:
+          requests:
+            storage: 1Gi

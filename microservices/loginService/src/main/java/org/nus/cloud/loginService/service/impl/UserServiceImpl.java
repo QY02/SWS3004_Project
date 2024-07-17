@@ -20,7 +20,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public User login(User user) {
-        User dbuser = baseMapper.selectOne(new QueryWrapper<User>().eq("id", user.getId()).eq("password", user.getPassword()));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (user.getId() != null) {
+            queryWrapper.eq("id", user.getId());
+        } else {
+            queryWrapper.eq("email", user.getEmail());
+        }
+        queryWrapper.eq("password", user.getPassword());
+        User dbuser = baseMapper.selectOne(queryWrapper);
         if (dbuser == null) {
             throw new ServiceException("400", "Invalid login information");
         }

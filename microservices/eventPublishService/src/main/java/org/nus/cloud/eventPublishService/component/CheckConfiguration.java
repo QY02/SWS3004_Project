@@ -15,6 +15,9 @@ public class CheckConfiguration {
     @Value("${event-global-data-service.port:}")
     private String eventGlobalDataServicePort;
 
+    @Value("${pod-index:}")
+    private String podIndex;
+
     public static boolean configurationValid = true;
 
     @PostConstruct
@@ -25,6 +28,10 @@ public class CheckConfiguration {
         }
         if (eventGlobalDataServicePort.isBlank()) {
             log.error("Event global data service port not set, the service will not work properly");
+            configurationValid = false;
+        }
+        if (podIndex.isBlank()) {
+            log.error("Pod index not set, the service will not work properly");
             configurationValid = false;
         }
     }

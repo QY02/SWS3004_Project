@@ -3,6 +3,8 @@ package org.nus.cloud.userRoutingHashGenerateService.controller;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.nus.cloud.userRoutingHashGenerateService.config.RoutingRulesConfig;
 import org.nus.cloud.userRoutingHashGenerateService.entity.Rule;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RequestCallback;
@@ -47,15 +50,30 @@ public class UserRoutingHashGenerateController {
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             headers.add(headerName, request.getHeader(headerName));
-            if (headerName.equalsIgnoreCase("email")) {
+            if (headerName.equalsIgnoreCase("fullUserId")) {
+                String routingHash = request.getHeader(headerName).substring(0, 8);
+                int routingHashInt = Integer.parseInt(routingHash);
+                headers.add("routingHash", routingHash);
+                if (headers.get("routingIndex") == null) {
+                    List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
+                    for (Rule rule : routingRuleList) {
+                        if (routingHashInt >= rule.getStartHash() && (routingHashInt < rule.getEndHash())) {
+                            headers.add("routingIndex", String.valueOf(rule.getIndex()));
+                            break;
+                        }
+                    }
+                }
+            } else if (headerName.equalsIgnoreCase("email")) {
                 String email = request.getHeader(headerName);
                 int emailHash = Math.abs(email.hashCode()) % 100000000;
                 headers.add("routingHash", String.format("%08d", emailHash));
-                List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
-                for (Rule rule : routingRuleList) {
-                    if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
-                        headers.add("routingIndex", String.valueOf(rule.getIndex()));
-                        break;
+                if (headers.get("routingIndex") == null) {
+                    List<Rule> routingRuleList = routingRulesConfig.getRoutingRuleList();
+                    for (Rule rule : routingRuleList) {
+                        if ((emailHash >= rule.getStartHash()) && (emailHash < rule.getEndHash())) {
+                            headers.add("routingIndex", String.valueOf(rule.getIndex()));
+                            break;
+                        }
                     }
                 }
             }
@@ -64,7 +82,7 @@ public class UserRoutingHashGenerateController {
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = getRestTemplateWithoutRetry();
         restTemplate.setErrorHandler(new ResponseErrorHandler() {
             @Override
             public boolean hasError(@NotNull ClientHttpResponse response) {
@@ -91,5 +109,13 @@ public class UserRoutingHashGenerateController {
         });
         responseEntity = ResponseEntity.status(responseEntity.getStatusCode()).headers(responseHeaders).body(responseEntity.getBody());
         return responseEntity;
+    }
+
+    public RestTemplate getRestTemplateWithoutRetry() {
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        httpClientBuilder.disableAutomaticRetries();
+        CloseableHttpClient httpClient = httpClientBuilder.build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        return new RestTemplate(requestFactory);
     }
 }

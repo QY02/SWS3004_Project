@@ -7,8 +7,8 @@ spec:
   selector:
     matchLabels:
       backend: register
-  serviceName: headless-service-register
-  replicas: 3
+  serviceName: cluster-ip-service-register
+  replicas: 2
   template:
     metadata:
       labels:

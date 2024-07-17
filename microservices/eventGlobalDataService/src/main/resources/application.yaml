@@ -7,6 +7,14 @@ spring:
     url: jdbc:mysql://localhost:3306/nus_cloud
     username: root
     password: 123456
+  rabbitmq:
+    host: 47.107.113.54
+    port: 25569
+    username: user
+    password: 56481367
+    virtual-host: test
+
+pod-index: 0
 
 logging:
   file:

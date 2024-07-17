@@ -16,11 +16,11 @@ public class BriefEvent {
     @TableId(type = IdType.NONE)
     private Integer id;
 
+    private Integer detailedDataLocation;
+
     private String publisherFullId;
 
     private LocalDateTime publishDatetime;
 
     private String name;
-
-    private Integer detailedDataLocation;
 }

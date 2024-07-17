@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: nus-cloud-project
+  name: stateful-set-order-record
+spec:
+  selector:
+    matchLabels:
+      backend: order-record
+  serviceName: cluster-ip-service-order-record
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        backend: order-record
+    spec:
+      containers:
+        - name: events-center-backend-order-record
+          image: qy02/events-center-backend-order-record
+          ports:
+            - containerPort: 25566
+              name: http
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-order-record-springboot-config
+                  key: SPRING_CONFIG_LOCATION
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USERNAME
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: mysql-user-config
+            - configMapRef:
+                name: mysql-config
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: backend-order-record-springboot-config
+            items:
+              - key: application.yaml
+                path: application.yaml

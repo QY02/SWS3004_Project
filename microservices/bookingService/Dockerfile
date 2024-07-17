@@ -13,6 +13,6 @@ WORKDIR /app
 
 COPY --from=build /build/target/bookingService-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 25567
+COPY start.sh .
 
-ENTRYPOINT ["java", "-jar", "bookingService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "start.sh"]

@@ -13,6 +13,6 @@ WORKDIR /app
 
 COPY --from=build /build/target/loginService-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 25560
+COPY start.sh .
 
-ENTRYPOINT ["java", "-jar", "loginService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "start.sh"]

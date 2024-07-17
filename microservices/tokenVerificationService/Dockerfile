@@ -13,6 +13,6 @@ WORKDIR /app
 
 COPY --from=build /build/target/tokenVerificationService-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 25562
+COPY start.sh .
 
-ENTRYPOINT ["java", "-jar", "tokenVerificationService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "start.sh"]

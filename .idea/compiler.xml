@@ -23,15 +23,15 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="backend" options="-parameters" />
-      <module name="bookingService" options="-parameters" />
-      <module name="eventDetailedDataService" options="-parameters" />
+      <module name="backend" options="" />
+      <module name="bookingService" options="" />
+      <module name="eventDetailedDataService" options="" />
       <module name="eventGlobalDataService" options="-parameters" />
       <module name="eventPublishService" options="-parameters" />
-      <module name="fileServer" options="-parameters" />
-      <module name="loginService" options="-parameters" />
-      <module name="orderRecordService" options="-parameters" />
-      <module name="registerService" options="-parameters" />
+      <module name="fileServer" options="" />
+      <module name="loginService" options="" />
+      <module name="orderRecordService" options="" />
+      <module name="registerService" options="" />
       <module name="tokenVerificationService" options="-parameters" />
       <module name="userRoutingHashGenerateService" options="-parameters" />
     </option>

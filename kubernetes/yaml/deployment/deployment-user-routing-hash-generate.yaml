@@ -6,7 +6,7 @@ metadata:
   labels:
     backend: user-routing-hash-generate
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       backend: user-routing-hash-generate

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stateful-set-mysql-event-detailed-data
+  namespace: nus-cloud-project
+spec:
+  selector:
+    matchLabels:
+      database: mysql-event-detailed-data
+  serviceName: headless-service-mysql-event-detailed-data
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        database: mysql-event-detailed-data
+    spec:
+      containers:
+        - name: events-center-mysql-event-detailed-data
+          image: qy02/events-center-mysql-event-detailed-data
+          volumeMounts:
+            - name: ebs-storage-mysql-event-detailed-data
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_DATABASE
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+  volumeClaimTemplates:
+    - metadata:
+        name: ebs-storage-mysql-event-detailed-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "ebs-sc"
+        resources:
+          requests:
+            storage: 1Gi

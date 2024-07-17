@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: backend-token-verification-springboot-config
+data:
+  application.yaml: |
+    server:
+      port: 25562
+    
+    spring:
+      data:
+        redis:
+          host: ${REDIS_HOST}
+          port: ${REDIS_PORT}
+          database: 0
+    
+    logging:
+      file:
+        name: logs/tokenVerificationService.log
+        path: logs/tokenVerificationService
+      level:
+        root: INFO
+  SPRING_CONFIG_LOCATION: "file:/config/application.yaml"

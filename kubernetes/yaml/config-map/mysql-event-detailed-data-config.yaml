@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nus-cloud-project
+  name: mysql-event-detailed-data-config
+data:
+  MYSQL_HOST_PREFIX: "stateful-set-mysql-event-detailed-data-"
+  MYSQL_HOST_POSTFIX: ".headless-service-mysql-event-detailed-data.nus-cloud-project.svc.cluster.local"
+  MYSQL_PORT: "3306"

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless-service-mysql-event-detailed-data
+  namespace: nus-cloud-project
+  labels:
+    database: service-mysql-event-detailed-data
+spec:
+  ports:
+    - name: mysql
+      port: 3306
+  selector:
+    database: mysql-event-detailed-data
+  clusterIP: None

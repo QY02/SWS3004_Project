@@ -23,10 +23,11 @@ create table if not exists event
 create table if not exists brief_event
 (
     id                     int,
+    detailed_data_location int,
+    primary key (id, detailed_data_location),
     publisher_full_id      varchar(20),
     publish_datetime       datetime,
-    name                   varchar(1024),
-    detailed_data_location int
+    name                   varchar(1024)
 );
 
 create table if not exists event_session

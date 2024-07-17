@@ -1,0 +1,42 @@
+2024-07-11T14:12:51.219+08:00  INFO 25524 --- [main] o.n.c.l.LoginServiceApplication          : Starting LoginServiceApplication using Java 17.0.11 with PID 25524 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\loginService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:12:51.222+08:00  INFO 25524 --- [main] o.n.c.l.LoginServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:12:52.090+08:00  INFO 25524 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-11T14:12:52.095+08:00  INFO 25524 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-11T14:12:52.140+08:00  INFO 25524 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2024-07-11T14:12:52.973+08:00  INFO 25524 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25560 (http)
+2024-07-11T14:12:52.991+08:00  INFO 25524 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:12:52.992+08:00  INFO 25524 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:12:53.085+08:00  INFO 25524 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:12:53.086+08:00  INFO 25524 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1802 ms
+2024-07-11T14:12:54.757+08:00  INFO 25524 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25560 (http) with context path ''
+2024-07-11T14:12:54.772+08:00  INFO 25524 --- [main] o.n.c.l.LoginServiceApplication          : Started LoginServiceApplication in 4.193 seconds (process running for 5.042)
+2024-07-11T14:12:54.775+08:00  INFO 25524 --- [main] o.n.c.loginService.component.ServerInfo  : LoginService is running at http://localhost:25560
+2024-07-11T14:12:58.088+08:00  INFO 25524 --- [http-nio-25560-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-07-11T14:12:58.089+08:00  INFO 25524 --- [http-nio-25560-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-07-11T14:12:58.091+08:00  INFO 25524 --- [http-nio-25560-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2024-07-11T14:14:03.953+08:00  INFO 21100 --- [main] o.n.c.l.LoginServiceApplication          : Starting LoginServiceApplication using Java 17.0.11 with PID 21100 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\loginService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:14:03.956+08:00  INFO 21100 --- [main] o.n.c.l.LoginServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:14:04.734+08:00  INFO 21100 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-11T14:14:04.737+08:00  INFO 21100 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-11T14:14:04.783+08:00  INFO 21100 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 24 ms. Found 0 Redis repository interfaces.
+2024-07-11T14:14:05.537+08:00  INFO 21100 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25560 (http)
+2024-07-11T14:14:05.552+08:00  INFO 21100 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:14:05.553+08:00  INFO 21100 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:14:05.639+08:00  INFO 21100 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:14:05.640+08:00  INFO 21100 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1629 ms
+2024-07-11T14:14:07.229+08:00  INFO 21100 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25560 (http) with context path ''
+2024-07-11T14:14:07.242+08:00  INFO 21100 --- [main] o.n.c.l.LoginServiceApplication          : Started LoginServiceApplication in 3.888 seconds (process running for 4.539)
+2024-07-11T14:14:07.246+08:00  INFO 21100 --- [main] o.n.c.loginService.component.ServerInfo  : LoginService is running at http://localhost:25560
+2024-07-11T14:17:27.126+08:00  INFO 7192 --- [main] o.n.c.l.LoginServiceApplication          : Starting LoginServiceApplication using Java 17.0.11 with PID 7192 (C:\Users\ryuu\Desktop\SWS3004_Project\microservices\loginService\target\classes started by ryuu in C:\Users\ryuu\Desktop\SWS3004_Project)
+2024-07-11T14:17:27.129+08:00  INFO 7192 --- [main] o.n.c.l.LoginServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+2024-07-11T14:17:27.917+08:00  INFO 7192 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-11T14:17:27.921+08:00  INFO 7192 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-11T14:17:27.960+08:00  INFO 7192 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2024-07-11T14:17:28.719+08:00  INFO 7192 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 25560 (http)
+2024-07-11T14:17:28.735+08:00  INFO 7192 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-11T14:17:28.736+08:00  INFO 7192 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
+2024-07-11T14:17:28.818+08:00  INFO 7192 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-11T14:17:28.819+08:00  INFO 7192 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1631 ms
+2024-07-11T14:17:30.358+08:00  INFO 7192 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 25560 (http) with context path ''
+2024-07-11T14:17:30.372+08:00  INFO 7192 --- [main] o.n.c.l.LoginServiceApplication          : Started LoginServiceApplication in 3.845 seconds (process running for 4.49)
+2024-07-11T14:17:30.376+08:00  INFO 7192 --- [main] o.n.c.loginService.component.ServerInfo  : LoginService is running at http://localhost:25560
