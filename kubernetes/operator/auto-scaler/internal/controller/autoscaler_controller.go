@@ -153,6 +153,19 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							fmt.Println("Row count exceeds max value")
 							ticker.Stop()
 
+							result, err := database.Query("select cast(routing_hash as signed) from user order by cast(routing_hash as signed) limit ?;", rowCount/2)
+							if err != nil {
+								logger.Error(err, "An error occur when querying")
+							}
+							result.Next()
+							var midHash int
+							err = result.Scan(&midHash)
+							if err != nil {
+								logger.Error(err, "An error occur when getting mid hash")
+								midHash = -1
+							}
+							fmt.Printf("midHash = %d\n", midHash)
+
 							createResult := createNewUserDatabase(ctx, r, req)
 
 							if createResult {
@@ -176,7 +189,7 @@ func (r *AutoScalerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 							}
 
 							if createResult {
-								startHash, midHash, endHash := splitRoutingRule(ctx, r, req, i)
+								startHash, endHash := splitRoutingRule(ctx, r, req, i, midHash)
 								fmt.Printf("startHash = %d, midHash = %d, endHash = %d\n", startHash, midHash, endHash)
 
 								if (startHash != -1) && (midHash != -1) && (endHash != -1) {
@@ -919,7 +932,7 @@ func cleanUpData(ctx context.Context, indexToSplit int, newPodMySqlUserIndex int
 	}
 }
 
-func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int) (int, int, int) {
+func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request, indexToSplit int, midHash int) (int, int) {
 	logger := log.FromContext(ctx)
 	var routingRuleConfigMap corev1.ConfigMap
 	if err := r.Get(ctx, client.ObjectKey{
@@ -938,8 +951,6 @@ func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Req
 					startHash, ok1 := rule["startHash"].(int)
 					endHash, ok2 := rule["endHash"].(int)
 					if ok1 && ok2 && endHash-startHash > 1 {
-						midHash := (endHash - startHash) / 2
-
 						splitRule1 := map[string]interface{}{
 							"startHash": startHash,
 							"endHash":   midHash,
@@ -958,7 +969,7 @@ func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Req
 						if err := r.Update(ctx, &routingRuleConfigMap); err != nil {
 							logger.Error(err, "unable to update RoutingRuleConfigMap")
 						} else {
-							return startHash, midHash, endHash
+							return startHash, endHash
 						}
 					}
 					break
@@ -970,7 +981,7 @@ func splitRoutingRule(ctx context.Context, r *AutoScalerReconciler, req ctrl.Req
 	} else {
 		logger.Error(err, "unable to fetch RoutingRuleConfigMap")
 	}
-	return -1, -1, -1
+	return -1, -1
 }
 
 func refreshHashGenerateService(ctx context.Context, r *AutoScalerReconciler, req ctrl.Request) bool {
