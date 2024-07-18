@@ -56,7 +56,7 @@ axios.post(`/briefEvent/getList`, {}, {
 
 const clickEvent = (eventId, detailedDataLocation) => {
   sessionStorage.setItem('eventId', eventId)
-  router.push(`/event?id=${detailedDataLocation}${eventId}`);
+  router.push(`/event?id=${detailedDataLocation}-${eventId}`);
 };
 
 function getSearchNew(message) {
