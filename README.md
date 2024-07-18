@@ -34,10 +34,10 @@ The architecture of the system can is described in the following graph:
 4. Data Storage
    ![Data Diagram](Data.drawio.svg)
 
-In our system, the backend is divided into to modules. User module and event module. In user module, their are login,
+In our system, the backend is divided into to modules. User module and event module. In user module, there are login,
 register, token verification and order record microservices. In event module, there are event global data, event
 detailed data, event publish and booking microservices. The microservice communicate with each other using HTTP
-protocol. Besides, we also using Redis and RabbitMQ to synchronous data between microservices.
+protocol. Besides, we also use Redis and RabbitMQ to synchronous data between microservices.
 
 ### 1.3 Key Components
 - **Microservices Architecture**: Each service (Register, Login, Booking, Event Publish) is deployed as a microservice
@@ -53,7 +53,7 @@ protocol. Besides, we also using Redis and RabbitMQ to synchronous data between 
 ### 2.1 Prerequisites
 List all the prerequisites needed to set up the environment.
 
-Operating system: Ubuntu
+Operating system: Ubuntu (Other OS may also work, but we have not tested on them)
 
 Software and libraries:
 
@@ -124,3 +124,6 @@ Detailed steps to deploy the application.
     ./start.sh
     ```
 
+## 4. Reference
+
+Some of our backend and frontend code are referenced from a project in SUSTech course CS304.

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nus-cloud-project
+  name: deployment-frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: events-center-frontend
+          image: qy02/events-center-frontend-nus
+          ports:
+            - containerPort: 80
+              name: http

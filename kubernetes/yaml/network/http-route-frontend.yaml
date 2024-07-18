@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  namespace: nus-cloud-project
+  name: http-route-frontend
+spec:
+  parentRefs:
+    - name: gateway-events-center-frontend
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: cluster-ip-frontend
+          port: 80
