@@ -36,6 +36,8 @@ spec:
                 configMapKeyRef:
                   name: rabbitmq-config
                   key: RABBITMQ_VIRTUAL_HOST
+            - name: TZ
+              value: "Asia/Shanghai"
           volumeMounts:
             - name: ebs-storage-rabbitmq
               mountPath: /var/lib/rabbitmq

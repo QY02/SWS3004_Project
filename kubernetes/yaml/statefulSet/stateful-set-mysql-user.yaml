@@ -31,6 +31,8 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: MYSQL_ROOT_PASSWORD
+            - name: TZ
+              value: "Asia/Shanghai"
   volumeClaimTemplates:
     - metadata:
         name: ebs-storage-mysql

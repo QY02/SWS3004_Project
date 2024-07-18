@@ -211,6 +211,104 @@ VALUES (1, 'F7', 'c', 7);
 insert into seat_template(seat_map_id, seat_id, type, price)
 VALUES (1, 'F8', 'c', 8);
 
+
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'A8', 'c', 8);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'B8', 'c', 8);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'C8', 'c', 8);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'D8', 'c', 8);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'E8', 'c', 8);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F1', 'a', 1);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F2', 'b', 2);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F3', 'c', 3);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F4', 'a', 4);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F5', 'b', 5);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F6', 'c', 6);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F7', 'c', 7);
+insert into seat_template(seat_map_id, seat_id, type, price)
+VALUES (2, 'F8', 'c', 8);
+
 insert into event(id, publisher_full_id, publish_datetime, name, content)
 VALUES (1, '3976113110000000', '2024-07-08 22:43:51', 'abc', 'aaabbbccc');
 

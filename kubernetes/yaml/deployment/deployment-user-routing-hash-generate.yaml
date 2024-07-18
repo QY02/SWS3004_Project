@@ -27,6 +27,8 @@ spec:
                 configMapKeyRef:
                   name: backend-user-routing-hash-generate-springboot-config
                   key: SPRING_CONFIG_LOCATION
+            - name: TZ
+              value: "Asia/Shanghai"
           volumeMounts:
             - name: config-volume
               mountPath: /config

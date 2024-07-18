@@ -22,6 +22,9 @@ spec:
               mountPath: /data
             - name: config-volume
               mountPath: /usr/local/etc/redis/
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
       volumes:
         - name: config-volume
           configMap:

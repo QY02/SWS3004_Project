@@ -40,6 +40,8 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: MYSQL_ROOT_PASSWORD
+            - name: TZ
+              value: "Asia/Shanghai"
           envFrom:
             - configMapRef:
                 name: mysql-event-detailed-data-config

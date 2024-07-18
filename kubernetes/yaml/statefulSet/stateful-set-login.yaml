@@ -55,6 +55,8 @@ spec:
                 configMapKeyRef:
                   name: redis-config
                   key: REDIS_PORT
+            - name: TZ
+              value: "Asia/Shanghai"
           envFrom:
             - configMapRef:
                 name: mysql-user-config
