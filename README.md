@@ -6,7 +6,7 @@ Team Member:
 - Student 1: [Name], [ID].
 - Student 2
 - Student 3: LIU YIQI, t0933248
-- Student 4
+- Student 4:
 
 ## 1. Project Overview
 
@@ -19,7 +19,7 @@ Roughly describe your project background.
 Provide a high-level overview of the system architecture. Describe the major components and how they interact with each other.
 
 ```
-![Architecture Diagram](link_to_your_diagram.png)
+![Architecture Diagram](System Architecture.jpg)
 ```
 
 ### 1.3 Key Components
@@ -37,7 +37,7 @@ List all the prerequisites needed to set up the environment.
 
 ### 2.2 Installation
 Step-by-step guide to setting up the development environment.
-linux
+Linux Ubuntu
 we assume you have
 git
 docker
@@ -79,14 +79,17 @@ ESK Cluster Setup
 
 Detailed steps to deploy the application.
 
-1. **Step 1**: Description and command.
+1. **Step 1**: Apply all the yaml files
     
     ```bash
-    command_to_run
+    kubectl apply -f "$dir"
     ```
-2. **Step 2**: Description and command.
+2. **Step 2**: Deploy the operator.
     ```bash
-    command_to_run
+    make deploy
+    ```
+3. Or you can quickly start the project
+    ```bash
+    ./start.sh
     ```
 
-**Note**: Replace placeholders with actual details relevant to the project. Ensure all commands and links are accurate and up to date.
