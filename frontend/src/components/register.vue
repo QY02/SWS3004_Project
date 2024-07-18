@@ -58,6 +58,8 @@
 import {reactive} from 'vue';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {LockOnIcon, MailIcon, RotateLockedIcon, User1Icon} from 'tdesign-icons-vue-next';
+import router from "@/routers/index.js";
+import axios from "axios";
 
 const formData = reactive({
   name: '',
@@ -77,39 +79,21 @@ const rules = {
     {validator: (v) => v === formData.password, message: "The two passwords are not the same"}]
 };
 
-// const apiUrl = inject('$API_URL');
-// axios.defaults.baseURL = apiUrl;
 const handleSubmit = ({validateResult}) => {
   if (validateResult === true) {
-    // axios.post("/login", {
-    //   id: formData.account,
-    //   password: formData.password
-    // })
-    //     .then((response) => {
-    //       const rd = response.data.data.id;
-    //       const type = response.data.data.type
-    //       const token = response.data.data.password
-    //       const themeColor = response.data.data.themeColor
-    //       sessionStorage.setItem('primary-color', themeColor);
-    //
-    //       sessionStorage.setItem('uid', rd);
-    //       sessionStorage.setItem('token', token);
-    //       sessionStorage.setItem('username', response.data.data.name)
-    //
-    //       MessagePlugin.success("Welcome! " + rd);
-    //       if (type === 0) {//管理员
-    //         router.push("/admin/homepage");
-    //       } else {//正常用户
-    //         router.push("/HomePage");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       if (error.response) {
-    //         MessagePlugin.error(error.response.data.msg);
-    //       } else {
-    //         MessagePlugin.error(error.message);
-    //       }
-    //     });
+    axios.post("/register", {
+      name: formData.name,
+      password: formData.password
+    }, {
+      headers: {
+        email: formData.email
+      }
+    })
+        .then((response) => {
+          const fullUserId = response.data.data.id
+          MessagePlugin.success("Register success, your user id is: " + fullUserId);
+          router.push("/login");
+        });
   } else {
     MessagePlugin.warning("Please make sure the input format is correct!")
   }
