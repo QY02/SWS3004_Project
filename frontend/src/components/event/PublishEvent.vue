@@ -83,6 +83,7 @@ const sendEvent = async () => {
   await axios.post(`/publishEvent`, {
         "name": formData.value.name,
         "content": formData.value.content,
+    "posterUrl": formData.value.poster,
         "sessions": eventSessionDataSubmit,
       }, {
         headers: {

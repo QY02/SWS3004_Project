@@ -131,9 +131,9 @@ watch(data, (newValue) => {
 });
 
 const presets = ref({
-  "Recent 7 day": [dayjs().format(), dayjs().add(7, 'day').format()],
-  "Recent 3 day": [dayjs().format(), dayjs().add(3, 'day').format()],
-  "Recent 1 day": [dayjs().format(), dayjs().add(1, 'day').format()],
+  "Recent 7 days": [dayjs().format(), dayjs().add(7, 'day').format()],
+  "Recent 3 days": [dayjs().format(), dayjs().add(3, 'day').format()],
+  "Recent 1 days": [dayjs().format(), dayjs().add(1, 'day').format()],
 });
 
 const visibleBody = ref(false);
