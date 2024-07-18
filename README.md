@@ -12,7 +12,8 @@ Team Member:
 
 ### 1.1 Project Description
 
-Roughly describe your project background. 
+Our team has developed a robust cloud-based microservices architecture designed to handle various operations efficiently. Deploy on
+ Kubernetes Cloud
 
 ### 1.2 System Architecture
 
@@ -23,9 +24,11 @@ Provide a high-level overview of the system architecture. Describe the major com
 ```
 
 ### 1.3 Key Components
-- **Component 1**: Brief description of the component's functionality.
-- **Component 2**: Brief description of the component's functionality.
-- **Component 3**: Brief description of the component's functionality.
+- **Microservices Architecture**: Each service (Register, Login, Booking, Event Publish) is deployed as a microservice
+- **Istio Gateway**: Manages external traffic, providing secure communication and traffic management capabilities.
+- **Service Mesh**: Istio's service mesh capabilities enable secure, reliable communication between microservices, ensuring observability and policy enforcement.
+- **Data Storage**: We use MySQL databases to store user and event data, structured to handle high volumes of transactions efficiently.
+- **Message Queuing**: RabbitMQ is employed to manage asynchronous communication between services, ensuring reliable data transfer and processing.
 
 ## 2. Environment Setup
 
