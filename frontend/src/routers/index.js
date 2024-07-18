@@ -23,7 +23,12 @@ const routes = [
                 name: 'book',
                 path: '/book',
                 component: () => import('@/components/book/Steps.vue')
-            }
+            },
+            {
+                name: 'home',
+                path: '/home',
+                component: () => import('@/components/home/HomePage.vue')
+            },
         ]
     }
 ];
