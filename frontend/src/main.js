@@ -6,10 +6,13 @@ import 'tdesign-vue-next/es/style/index.css';
 import './style/layout.less';
 import "vue-draggable-resizable/style.css";
 import axios from "axios";
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 
 const app = createApp(App);
 app.use(TDesign);
 app.use(router);
+app.use(ElementPlus);
 app.mount('#app');
 
 axios.defaults.baseURL = 'http://aad092aaf80b94cf998d0facf27d6975-1447862158.us-east-1.elb.amazonaws.com:25670'
@@ -35,3 +38,20 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(error);
 });
+
+const fileServerAxios = axios.create({
+    baseURL: 'http://aad092aaf80b94cf998d0facf27d6975-1447862158.us-east-1.elb.amazonaws.com:25670',
+});
+
+fileServerAxios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response) {
+        MessagePlugin.error(error.response.data.msg);
+    } else {
+        MessagePlugin.error(error.message);
+    }
+    return Promise.reject(error);
+});
+
+export { fileServerAxios };

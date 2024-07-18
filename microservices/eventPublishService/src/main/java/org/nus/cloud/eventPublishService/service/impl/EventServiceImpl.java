@@ -66,7 +66,8 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
             throw new ServiceException("400", "Invalid event name");
         }
         String content = requestData.getString("content");
-        Event event = new Event(null, fullUserId, LocalDateTime.now(), name, content);
+        String posterUrl = requestData.getString("posterUrl");
+        Event event = new Event(null, fullUserId, LocalDateTime.now(), name, content, posterUrl);
         baseMapper.insert(event);
         List<JSONObject> eventSessionJSONObjectList = requestData.getList("sessions", JSONObject.class);
         if (eventSessionJSONObjectList == null || eventSessionJSONObjectList.isEmpty()) {
@@ -152,6 +153,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         eventBriefData.put("publisherFullId", event.getPublisherFullId());
         eventBriefData.put("publishDatetime", event.getPublishDatetime());
         eventBriefData.put("name", name);
+        eventBriefData.put("posterUrl", posterUrl);
         eventBriefData.put("detailedDataLocation", podIndex);
         rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", eventBriefData.toString());
         JSONObject jsonObject = new JSONObject();

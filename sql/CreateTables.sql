@@ -17,7 +17,8 @@ create table if not exists event
     publisher_full_id varchar(20),
     publish_datetime  datetime      not null,
     name              varchar(1024) not null,
-    content           text
+    content    text,
+    poster_url varchar(1024)
 );
 
 create table if not exists brief_event
@@ -27,7 +28,8 @@ create table if not exists brief_event
     primary key (id, detailed_data_location),
     publisher_full_id      varchar(20),
     publish_datetime       datetime,
-    name                   varchar(1024)
+    name       varchar(1024),
+    poster_url varchar(1024)
 );
 
 create table if not exists event_session

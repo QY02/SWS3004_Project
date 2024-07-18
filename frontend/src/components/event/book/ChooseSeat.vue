@@ -108,11 +108,11 @@
 </template>
 
 <script setup lang="ts">
-// import {currentStep, submitData} from '@/components/book/Steps.vue';
-import {bookingInformation, currentStep, sessionInformation} from '@/components/book/Steps.vue';
+// import {currentStep, submitData} from '@/components/event/book/Steps.vue';
+import {bookingInformation, currentStep, sessionInformation} from '@/components/event/book/Steps.vue';
 import {getCurrentInstance, onMounted, reactive, Ref, ref, watch} from "vue";
 import {MessagePlugin, NotifyPlugin} from "tdesign-vue-next";
-import {checkForm} from '@/components/book/InputInformation.vue';
+import {checkForm} from '@/components/event/book/InputInformation.vue';
 import axios, {AxiosRequestConfig} from "axios";
 
 const seatMap = reactive({

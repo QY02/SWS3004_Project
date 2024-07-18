@@ -23,4 +23,6 @@ public class Event {
     private String name;
 
     private String content;
+
+    private String posterUrl;
 }
