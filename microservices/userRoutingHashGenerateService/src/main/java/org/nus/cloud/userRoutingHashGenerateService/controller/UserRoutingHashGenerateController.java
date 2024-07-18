@@ -100,8 +100,6 @@ public class UserRoutingHashGenerateController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         Objects.requireNonNull(responseEntity).getHeaders().forEach((key, value) -> {
-            System.out.println(key);
-            System.out.println("aaa" + value);
             if (key.equalsIgnoreCase("Transfer-Encoding")) {
                 value = value.stream().filter(s -> !s.equalsIgnoreCase("chunked")).collect(Collectors.toList());
             }
