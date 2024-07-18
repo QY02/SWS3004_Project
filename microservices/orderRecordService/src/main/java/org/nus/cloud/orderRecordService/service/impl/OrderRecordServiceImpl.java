@@ -3,6 +3,7 @@ package org.nus.cloud.orderRecordService.service.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.nus.cloud.orderRecordService.entity.OrderRecord;
 import org.nus.cloud.orderRecordService.exception.ServiceException;
@@ -19,10 +20,13 @@ import java.util.List;
 public class OrderRecordServiceImpl extends ServiceImpl<OrderRecordMapper, OrderRecord> implements IOrderRecordService {
 
     @Override
-    public List<OrderRecord> get(JSONObject requestData) {
+    public List<OrderRecord> get(HttpServletRequest request, JSONObject requestData) {
         QueryWrapper<OrderRecord> queryWrapper = new QueryWrapper<>();
+        String fullUserId = request.getParameter("fullUserId");
+        queryWrapper.eq("full_user_id", fullUserId);
         Integer id = requestData.getInteger("id");
         Integer eventId = requestData.getInteger("eventId");
+        Integer detailedDataLocation = requestData.getInteger("detailedDataLocation");
         Integer eventSessionId = requestData.getInteger("eventSessionId");
         String seatId = requestData.getString("seatId");
         Integer searchPriceStart = requestData.getInteger("searchPriceStart");
@@ -34,6 +38,9 @@ public class OrderRecordServiceImpl extends ServiceImpl<OrderRecordMapper, Order
         }
         if (eventId != null) {
             queryWrapper.eq("event_id", eventId);
+        }
+        if (detailedDataLocation != null) {
+            queryWrapper.eq("detailed_data_location", detailedDataLocation);
         }
         if (eventSessionId != null) {
             queryWrapper.eq("event_session_id", eventSessionId);

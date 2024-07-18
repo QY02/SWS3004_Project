@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IEventService extends IService<Event> {
     @Transactional(rollbackFor = {Exception.class})
-    JSONObject book(String userRoutingIndex, String fullUserId, JSONObject requestData);
+    JSONObject book(String userRoutingIndex, String fullUserId, String eventRoutingIndex, JSONObject requestData);
 }

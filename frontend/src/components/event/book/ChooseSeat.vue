@@ -1,8 +1,8 @@
 <template>
   <t-space direction="vertical" size="medium" align="center">
-    <h1 class="choose-seat-title">选择座位</h1>
+    <h1 class="choose-seat-title">Choose seat</h1>
     <div class="choose-seat-legend-div">
-      <span>{{ `已选择：${bookingInformation.chosenSeat === null ? '无' : bookingInformation.chosenSeat}` }}</span>
+      <span>{{ `Selected：${bookingInformation.chosenSeat === null ? 'None' : bookingInformation.chosenSeat}` }}</span>
       <t-space>
         <div style="display: flex; align-items: center">
           <svg
@@ -11,7 +11,7 @@
             <path fill="#0059de"
                   d="M176 80H336c44.2 0 80 35.8 80 80v34.8c7.7-1.8 15.7-2.8 24-2.8s16.3 1 24 2.8V160c0-70.7-57.3-128-128-128H176C105.3 32 48 89.3 48 160v34.8c7.7-1.8 15.7-2.8 24-2.8s16.3 1 24 2.8V160c0-44.2 35.8-80 80-80zM462.5 227.6c-7.1-2.3-14.6-3.6-22.5-3.6c-9.5 0-18.5 1.8-26.8 5.2c-24.1 9.7-41.8 32-44.7 58.8H143.6c-3-26.8-20.6-49.1-44.7-58.8C90.5 225.8 81.5 224 72 224c-7.9 0-15.4 1.3-22.5 3.6C20.7 237 0 264.1 0 296V432c0 26.5 21.5 48 48 48H96c20.9 0 38.7-13.4 45.3-32H370.7c6.6 18.6 24.4 32 45.3 32h48c26.5 0 48-21.5 48-48V296c0-31.9-20.7-59-49.5-68.4zM368 400H144V336h32H336h32v64zM96 400v32H48l0-136c0-13.3 10.7-24 24-24s24 10.7 24 24v40 64zM464 296V432H416V296c0-13.3 10.7-24 24-24s24 10.7 24 24z"/>
           </svg>
-          ：可选
+          ：Can select
         </div>
         <div style="display: flex; align-items: center">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@
             <path fill="#0059de"
                   d="M48 224c-26.5 0-48 21.5-48 48V448c0 17.7 14.3 32 32 32H64c17.7 0 32-14.3 32-32H416c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V272c0-26.5-21.5-48-48-48s-48 21.5-48 48v80H96V272c0-26.5-21.5-48-48-48z"/>
           </svg>
-          ：已被占用
+          ：Already occupied
         </div>
         <div style="display: flex; align-items: center">
           <svg
@@ -29,7 +29,7 @@
             <path fill="#0059de"
                   d="M64 32V192H96h32v32 96H384V224 192h32 32V32H64zm0 192H0V480H96V448H416v32h96V224H448 416v32 64 32H384 128 96V320 256 224H64z"/>
           </svg>
-          ：已选
+          ：Selected
         </div>
       </t-space>
     </div>
@@ -54,7 +54,7 @@
               <div class="choose-seat-inside-div">
                 <div v-for="seat in seatMap.seats"
                      :style="`position: absolute; left: ${(seat.x / seatMap.size.width) * 100}%; top: ${(seat.y / seatMap.size.height) * 100}%; width: ${(10 / seatMap.size.width) * 100}%; height: ${(10 / seatMap.size.height) * 100}%; display: flex; justify-content: center; align-items: center;`">
-                  <t-popconfirm theme="default" cancel-btn="取消">
+                  <t-popconfirm theme="default" cancel-btn="Cancel">
                     <template #confirmBtn>
                       <t-button size="small" theme="primary" style="margin-left: 6px" @click="handleChoose(seat)">
                         {{ getConfirmBtnStatus(seat) }}
@@ -63,8 +63,8 @@
                     <template #content>
                       <p style="margin-top: 1px; margin-left: 10px; margin-bottom: 0; font-weight: bold; font-size: 18px">
                         {{ seat.id }}</p>
-                      <p style="margin-left: 10px">{{ `类型: ${seat.type}` }}</p>
-                      <p style="margin-bottom: 0; margin-left: 10px">{{ `价格: ${seat.price}` }}</p>
+                      <p style="margin-left: 10px">{{ `Type: ${seat.type}` }}</p>
+                      <p style="margin-bottom: 0; margin-left: 10px">{{ `Price: ${seat.price}` }}</p>
                     </template>
                     <template #icon>
                       <svg
@@ -101,17 +101,16 @@
       </div>
     </t-loading>
     <t-space size="medium">
-      <t-button @click="currentStep--">上一步</t-button>
-      <t-button @click="handleSubmit">提交</t-button>
+      <t-button @click="currentStep--">Back</t-button>
+      <t-button @click="handleSubmit">Submit</t-button>
     </t-space>
   </t-space>
 </template>
 
 <script setup lang="ts">
-// import {currentStep, submitData} from '@/components/event/book/Steps.vue';
-import {bookingInformation, currentStep, sessionInformation} from '@/components/event/book/Steps.vue';
-import {getCurrentInstance, onMounted, reactive, Ref, ref, watch} from "vue";
-import {MessagePlugin, NotifyPlugin} from "tdesign-vue-next";
+import {bookingInformation, currentStep, sessionInformation, submitData} from '@/components/event/book/Steps.vue';
+import {onMounted, reactive, Ref, ref, watch} from "vue";
+import {MessagePlugin} from "tdesign-vue-next";
 import {checkForm} from '@/components/event/book/InputInformation.vue';
 import axios, {AxiosRequestConfig} from "axios";
 
@@ -283,9 +282,9 @@ const updateScrollbar = () => {
 
 const getConfirmBtnStatus = (seat) => {
   if (!seat.availability) {
-    return '不可选';
+    return 'Not selectable';
   } else {
-    return bookingInformation.chosenSeat !== seat.id ? '选择' : '已选择';
+    return bookingInformation.chosenSeat !== seat.id ? 'Select' : 'Selected';
   }
 }
 
@@ -316,34 +315,34 @@ const onWheel = (event) => {
 const handleSubmit = async () => {
   let result = await checkForm();
   if (bookingInformation.chosenSeat === null) {
-    await MessagePlugin.warning('请选择一个座位');
+    await MessagePlugin.warning('Please select a seat');
     result = false;
   }
   if (result) {
-    // await submitData();
+    await submitData();
   }
 }
 
 let fetchSeatMapStatus = ref(0);
 
-const instance = getCurrentInstance();
-const globalProperties = instance.appContext.config.globalProperties;
-const apiBaseUrl = globalProperties.$apiBaseUrl;
-const token = globalProperties.$token;
-axios.defaults.baseURL = apiBaseUrl;
+const fullUserId = sessionStorage.getItem('fullUserId')
+const token = sessionStorage.getItem('token')
+const eventDetailedDataLocation = sessionStorage.getItem("eventDetailedDataLocation")
 
 const fetchSessionInformation = async () => {
   fetchSeatMapStatus.value = 0;
-  axios.post("/seatMap/getSeatMapWithSeatsById", {seatMapId: sessionInformation[bookingInformation.chosenSession].seatMapId}, {headers: {token: token}} as AxiosRequestConfig).then(response => {
+  axios.post("/detailedEvent/getSeatMapDataWithSeatsBySeatMapId", {id: sessionInformation[bookingInformation.chosenSession].seatMapId}, {
+    headers:
+        {
+          fullUserId: fullUserId,
+          token: token,
+          eventRoutingIndex: eventDetailedDataLocation
+        }
+  } as AxiosRequestConfig).then(response => {
     Object.assign(seatMap, response.data.data.detailedData);
     fetchSeatMapStatus.value = 1;
   }).catch(error => {
     fetchSeatMapStatus.value = -1;
-    if (error.response) {
-      NotifyPlugin.error({title: error.response.data.msg});
-    } else {
-      NotifyPlugin.error({title: error.message});
-    }
   })
 }
 

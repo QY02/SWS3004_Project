@@ -1,17 +1,17 @@
 <template>
   <div class="steps-main-div">
     <t-steps style="width: 70%" :current="currentStep" :readonly="currentStep===3" @change="stepChange">
-      <t-step-item title="选择场次">
+      <t-step-item title="Choose session">
         <template #icon>
           <TimeIcon size="24" class="icon-margin"/>
         </template>
       </t-step-item>
-      <t-step-item title="填写信息">
+      <t-step-item title="Input information">
         <template #icon>
           <VerifyIcon size="24" class="icon-margin"/>
         </template>
       </t-step-item>
-      <t-step-item title="选择座位">
+      <t-step-item title="Choose seat">
         <template #icon>
           <svg class="t-icon t-icon-verify icon-margin" style="margin-top: 1px" xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 512 512" width="1.5em" height="1.5em">
@@ -20,7 +20,7 @@
           </svg>
         </template>
       </t-step-item>
-      <t-step-item title="完成" class="finish-step-item">
+      <t-step-item title="Finish" class="finish-step-item">
         <template #icon>
           <CheckCircleIcon size="24" class="icon-margin"/>
         </template>
@@ -51,15 +51,18 @@ import ChooseSeat from '@/components/event/book/ChooseSeat.vue';
 import InputInformation from '@/components/event/book/InputInformation.vue';
 import Finish from '@/components/event/book/Finish.vue';
 import {MessagePlugin, NotifyPlugin} from "tdesign-vue-next";
-import {AxiosRequestConfig} from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 import {useRoute} from "vue-router";
+
+const fullUserId = sessionStorage.getItem('fullUserId')
+const token = sessionStorage.getItem('token')
 
 const stepChange = (current: number, previous: number) => {
   if ((previous !== 3) && (current !== 3)) {
     if (!((previous === 0) && (bookingInformation.chosenSession === null))) {
       currentStep.value = current;
     } else {
-      MessagePlugin.warning('请选择一个场次');
+      MessagePlugin.warning('Please choose a session');
     }
   }
 }
@@ -71,43 +74,48 @@ const removeClickableOnFinishStepItem = () => {
   }
 }
 
-// axios.defaults.baseURL = globalProperties.apiBaseUrl;
-// const route = useRoute();
-// bookingInformation.eventId = Number(route.query.eventId);
-// const fetchSessionInformation = async () => {
-//   fetchSessionInformationStatus.value = 0;
-//   try {
-//     let response = await axios.post("/event/getEventSessionsByEventId", {eventId: bookingInformation.eventId}, {headers: {token: globalProperties.token}} as AxiosRequestConfig);
-//     const dataConverted = response.data.data.map((item: Session) => ({
-//       ...item,
-//       startTime: new Date(item.startTime),
-//       endTime: new Date(item.endTime),
-//       registrationStartTime: new Date(item.registrationStartTime),
-//       registrationEndTime: new Date(item.registrationEndTime)
-//     } as Session));
-//     Object.assign(sessionInformation, dataConverted);
-//     response = await axios.post("/orderRecord/getMyOrderRecordByEventId", {
-//       eventId: bookingInformation.eventId,
-//       mode: 0
-//     }, {headers: {token: globalProperties.token}} as AxiosRequestConfig);
-//     const registeredEventSessionIdArray = response.data.data;
-//     sessionInformation.forEach(session => {
-//       session.registered = !!registeredEventSessionIdArray.includes(session.eventSessionId);
-//     })
-//     fetchSessionInformationStatus.value = 1;
-//   } catch (error) {
-//     fetchSessionInformationStatus.value = -1;
-//     if (error.response) {
-//       await NotifyPlugin.error({title: error.response.data.msg});
-//     } else {
-//       await NotifyPlugin.error({title: error.message});
-//     }
-//   }
-// }
+const route = useRoute();
+const eventIdList = (route.query.id as string).split("-");
+const eventDetailedDataLocation = eventIdList[0];
+const eventId = eventIdList[1];
+
+bookingInformation.eventId = Number(eventId);
+const fetchSessionInformation = async () => {
+  fetchSessionInformationStatus.value = 0;
+  try {
+    let response = await axios.post("/detailedEvent/getEventSessionListByEventId", {id: bookingInformation.eventId}, {
+      headers: {
+        fullUserId: fullUserId,
+        token: token,
+        eventRoutingIndex: eventDetailedDataLocation
+      }
+    } as AxiosRequestConfig);
+    const dataConverted = response.data.data.map((item: Session) => ({
+      ...item,
+      startTime: new Date(item.startTime),
+      endTime: new Date(item.endTime),
+      registrationStartTime: new Date(item.registrationStartTime),
+      registrationEndTime: new Date(item.registrationEndTime)
+    } as Session));
+    sessionInformation.length = 0;
+    sessionInformation.push(...dataConverted);
+    response = await axios.post("/orderRecord/get", {
+      eventId: bookingInformation.eventId,
+      detailedDataLocation: eventDetailedDataLocation
+    }, {headers: {fullUserId: fullUserId, token: token}} as AxiosRequestConfig);
+    const registeredEventSessionIdArray = response.data.data.map((item) => item.eventSessionId);
+    sessionInformation.forEach(session => {
+      session.registered = !!registeredEventSessionIdArray.includes(session.eventSessionId);
+    })
+    fetchSessionInformationStatus.value = 1;
+  } catch (error) {
+    fetchSessionInformationStatus.value = -1;
+  }
+}
 
 onMounted(() => {
   removeClickableOnFinishStepItem();
-  // fetchSessionInformation();
+  fetchSessionInformation();
 });
 
 </script>
@@ -115,7 +123,7 @@ onMounted(() => {
 <script lang="ts">
 import {reactive, ref} from "vue";
 import {FormRule, MessagePlugin, NotifyPlugin} from "tdesign-vue-next";
-import axios, {AxiosRequestConfig} from "axios";
+// import axios, {AxiosRequestConfig} from "axios";
 import {useRoute} from "vue-router";
 
 
@@ -148,19 +156,19 @@ export const bookingInformation: BookingInformation = reactive({
   chosenSeat: null,
   additionalInformation: [
     {
-      name: '手机号',
+      name: 'Phone',
       nameEng: 'phoneNumber',
       required: true,
       rules: [
         {
           telnumber: true,
-          message: '请输入正确的手机号码'
+          message: 'Please input the correct phone number'
         }
       ],
       value: ''
     },
     {
-      name: '书院',
+      name: 'College',
       nameEng: 'college',
       required: true,
       rules: null,
@@ -172,16 +180,10 @@ export interface Session {
   eventSessionId: number;
   startTime: Date;
   endTime: Date;
-  registrationRequired: boolean;
   registrationStartTime: Date;
   registrationEndTime: Date;
-  minSize: number;
-  maxSize: number;
-  currentSize: number;
   seatMapId: number;
   venue: string;
-  location: string;
-  additionalInformationRequired: string;
   registered: boolean;
 }
 
@@ -189,73 +191,58 @@ export let sessionInformation: Session[] = reactive([{
   eventSessionId: 1,
   startTime: new Date(2024, 3, 1, 8),
   endTime: new Date(2024, 3, 1, 10),
-  registrationRequired: true,
   registrationStartTime: new Date(2024, 2, 25, 10),
   registrationEndTime: new Date(2024, 2, 27, 0),
-  minSize: 10,
-  currentSize: 20,
-  maxSize: 100,
   seatMapId: 1,
   venue: '三教107',
-  location: '',
-  additionalInformationRequired: '[{"name": "手机号", "nameEng": "phoneNumber", "required": true, "rules": [{"telnumber": true ,"message": "请输入正确的手机号码"}], "value": ""}, {"name": "书院", "nameEng": "college", "required": true, "rules": null, "value": ""}]',
   registered: false
 },
   {
     eventSessionId: 2,
     startTime: new Date(2024, 3, 1, 10),
     endTime: new Date(2024, 3, 1, 12),
-    registrationRequired: false,
     registrationStartTime: null,
     registrationEndTime: null,
-    minSize: 5,
-    maxSize: 500,
-    currentSize: 100,
     seatMapId: 1,
     venue: '三教107',
-    location: '',
-    additionalInformationRequired: '[{"name": "手机号", "nameEng": "phoneNumber", "required": true, "rules": [{"telnumber": true ,"message": "请输入正确的手机号码"}], "value": ""}, {"name": "书院", "nameEng": "college", "required": true, "rules": null, "value": ""}]',
     registered: false
   },
   {
     eventSessionId: 3,
     startTime: new Date(2024, 3, 2, 8),
     endTime: new Date(2024, 3, 2, 10),
-    registrationRequired: true,
     registrationStartTime: new Date(2024, 2, 26, 10),
     registrationEndTime: new Date(2024, 2, 28, 0),
-    minSize: 20,
-    maxSize: 80,
-    currentSize: 60,
     seatMapId: 1,
     venue: '一教111',
-    location: '',
-    additionalInformationRequired: '[{"name": "手机号", "nameEng": "phoneNumber", "required": true, "rules": [{"telnumber": true ,"message": "请输入正确的手机号码"}], "value": ""}, {"name": "书院", "nameEng": "college", "required": true, "rules": null, "value": ""}]',
     registered: true
   }])
 
-// export const submitData = async () => {
-//   axios.defaults.baseURL = globalProperties.apiBaseUrl;
-//   axios.post("/event/submitBookingData", {
-//     eventId: bookingInformation.eventId,
-//     eventSessionId: sessionInformation[bookingInformation.chosenSession].eventSessionId,
-//     seatId: bookingInformation.chosenSeat,
-//     additionalInformation: JSON.stringify(bookingInformation.additionalInformation.map(item => ({
-//       name: item.name,
-//       nameEng: item.nameEng,
-//       value: item.value
-//     })))
-//   }, {headers: {token: globalProperties.token}} as AxiosRequestConfig).then(() => {
-//     MessagePlugin.success('提交成功');
-//     currentStep.value++;
-//   }).catch(error => {
-//     if (error.response) {
-//       NotifyPlugin.error({title: error.response.data.msg});
-//     } else {
-//       NotifyPlugin.error({title: error.message});
-//     }
-//   })
-// }
+const fullUserId = sessionStorage.getItem('fullUserId')
+const token = sessionStorage.getItem('token')
+const eventDetailedDataLocation = sessionStorage.getItem('eventDetailedDataLocation')
+
+export const submitData = async () => {
+  axios.post("/book", {
+    eventId: bookingInformation.eventId,
+    eventSessionId: sessionInformation[bookingInformation.chosenSession].eventSessionId,
+    seatId: bookingInformation.chosenSeat,
+    additionalInformation: JSON.stringify(bookingInformation.additionalInformation.map(item => ({
+      name: item.name,
+      nameEng: item.nameEng,
+      value: item.value
+    })))
+  }, {
+    headers: {
+      fullUserId: fullUserId,
+      token: token,
+      eventRoutingIndex: eventDetailedDataLocation
+    }
+  } as AxiosRequestConfig).then(() => {
+    MessagePlugin.success('Submit success');
+    currentStep.value++;
+  }).catch()
+}
 
 </script>
 

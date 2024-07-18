@@ -45,7 +45,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
     private SeatMapper seatMapper;
 
     @Override
-    public JSONObject book(String userRoutingIndex, String fullUserId, JSONObject requestData) {
+    public JSONObject book(String userRoutingIndex, String fullUserId, String eventRoutingIndex, JSONObject requestData) {
         Integer eventId = requestData.getInteger("eventId");
         Integer eventSessionId = requestData.getInteger("eventSessionId");
         String seatId = requestData.getString("seatId");
@@ -66,7 +66,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         if (eventSession == null) {
             throw new ServiceException("400", "Event session not exist");
         }
-        if (LocalDateTime.now().isBefore(eventSession.getStartTime()) || (!LocalDateTime.now().isBefore(eventSession.getEndTime()))) {
+        if (LocalDateTime.now().isBefore(eventSession.getRegistrationStartTime()) || (!LocalDateTime.now().isBefore(eventSession.getRegistrationEndTime()))) {
             throw new ServiceException("401", "The current time is not within the registration period");
         }
         SeatMap seatMap = seatMapMapper.selectById(eventSession.getSeatMapId());
@@ -83,6 +83,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setFullUserId(fullUserId);
         orderRecord.setEventId(eventId);
+        orderRecord.setDetailedDataLocation(Integer.valueOf(eventRoutingIndex));
         orderRecord.setEventSessionId(eventSessionId);
         orderRecord.setSeatId(seatId);
         orderRecord.setAdditionalInformation(requestData.getString("additionalInformation"));

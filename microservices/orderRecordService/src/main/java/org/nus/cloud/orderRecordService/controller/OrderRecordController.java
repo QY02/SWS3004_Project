@@ -2,6 +2,7 @@ package org.nus.cloud.orderRecordService.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,8 @@ public class OrderRecordController {
     private IOrderRecordService orderRecordService;
 
     @PostMapping("/get")
-    public Result get(@NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
-        return Result.success(response, orderRecordService.get(requestData));
+    public Result get(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @RequestBody JSONObject requestData) {
+        return Result.success(response, orderRecordService.get(request, requestData));
     }
 
     @PostMapping("/add")

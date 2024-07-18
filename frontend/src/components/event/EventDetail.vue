@@ -6,8 +6,8 @@
       </div>
       <div class="right">
         <div class="card-2">
-          <h2>{{ eventDetail.name }}</h2>
-          <h3>{{ eventDetail.content }}</h3>
+          <h2 style="overflow-wrap: break-word">{{ eventDetail.name }}</h2>
+          <h3 style="overflow-wrap: break-word">{{ eventDetail.content }}</h3>
         </div>
       </div>
     </div>
@@ -86,6 +86,7 @@ const token = sessionStorage.getItem('token')
 const route = useRoute();
 const eventIdList = route.query.id.split("-");
 const eventDetailedDataLocation = ref(eventIdList[0]);
+sessionStorage.setItem("eventDetailedDataLocation", eventDetailedDataLocation.value);
 const eventId = ref(eventIdList[1]);
 const eventDetail = ref({})
 
@@ -165,7 +166,7 @@ onMounted(() => {
 
 .card-2 {
   height: 3.5rem;
-  width: 100%;
+  width: 50vw;
   border-radius: 1rem;
 }
 

@@ -2,10 +2,10 @@
   <div class="main-div-finish">
     <t-space direction="vertical" align="center" style="gap: 1px">
       <CheckCircleIcon size="100px" style="color: #009800"/>
-      <h1 class="success-prompt-finish">预订成功</h1>
+      <h1 class="success-prompt-finish">Book success</h1>
       <t-space>
-        <t-button>查看订单</t-button>
-        <t-button>返回首页</t-button>
+        <t-button>View order</t-button>
+        <t-button @click="router.push('/home')">Back to home</t-button>
       </t-space>
     </t-space>
   </div>
@@ -13,6 +13,7 @@
 
 <script setup>
 import {CheckCircleIcon} from 'tdesign-icons-vue-next';
+import router from "@/routers/index.js";
 </script>
 
 <style scoped lang="less">

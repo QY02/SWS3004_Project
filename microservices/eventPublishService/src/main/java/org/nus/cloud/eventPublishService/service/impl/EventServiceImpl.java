@@ -97,7 +97,7 @@ public class EventServiceImpl extends ServiceImpl<EventMapper, Event> implements
                 serviceException.setCauseObject(session);
                 throw serviceException;
             }
-            if (!startTime.isBefore(registrationEndTime)) {
+            if (!startTime.isBefore(endTime)) {
                 ServiceException serviceException = new ServiceException("400", "Start time should earlier than end time");
                 serviceException.setCauseObject(session);
                 throw serviceException;

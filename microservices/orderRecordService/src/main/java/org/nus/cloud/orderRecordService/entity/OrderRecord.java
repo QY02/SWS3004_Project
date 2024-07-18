@@ -20,6 +20,8 @@ public class OrderRecord {
 
     private Integer eventId;
 
+    private Integer detailedDataLocation;
+
     private Integer eventSessionId;
 
     private String seatId;

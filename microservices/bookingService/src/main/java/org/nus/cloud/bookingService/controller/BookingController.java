@@ -32,6 +32,10 @@ public class BookingController {
         if ((fullUserId == null) || (fullUserId.isBlank())) {
             return Result.error(response, "401", "Invalid fullUserId");
         }
-        return Result.success(response, eventService.book(userRoutingIndex, fullUserId, requestData));
+        String eventRoutingIndex = request.getHeader("eventRoutingIndex");
+        if ((eventRoutingIndex == null) || (eventRoutingIndex.isBlank())) {
+            return Result.error(response, "401", "Invalid eventRoutingIndex");
+        }
+        return Result.success(response, eventService.book(userRoutingIndex, fullUserId, eventRoutingIndex, requestData));
     }
 }
