@@ -40,6 +40,8 @@
 import {reactive} from 'vue';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {DesktopIcon, LockOnIcon} from 'tdesign-icons-vue-next';
+import router from "@/routers/index.js";
+import axios from "axios";
 
 const formData = reactive({
   account: '',
@@ -54,39 +56,31 @@ const rules = {
   }],
 };
 
-// const apiUrl = inject('$API_URL');
-// axios.defaults.baseURL = apiUrl;
 const handleSubmit = ({validateResult}) => {
+  let headers;
+  if (formData.account.includes("@")) {
+    headers = {
+      email: formData.account
+    }
+  } else {
+    headers = {
+      fullUserId: formData.account
+    }
+  }
   if (validateResult === true) {
-    // axios.post("/login", {
-    //   id: formData.account,
-    //   password: formData.password
-    // })
-    //     .then((response) => {
-    //       const rd = response.data.data.id;
-    //       const type = response.data.data.type
-    //       const token = response.data.data.password
-    //       const themeColor = response.data.data.themeColor
-    //       sessionStorage.setItem('primary-color', themeColor);
-    //
-    //       sessionStorage.setItem('uid', rd);
-    //       sessionStorage.setItem('token', token);
-    //       sessionStorage.setItem('username', response.data.data.name)
-    //
-    //       MessagePlugin.success("Welcome! " + rd);
-    //       if (type === 0) {//管理员
-    //         router.push("/admin/homepage");
-    //       } else {//正常用户
-    //         router.push("/HomePage");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       if (error.response) {
-    //         MessagePlugin.error(error.response.data.msg);
-    //       } else {
-    //         MessagePlugin.error(error.message);
-    //       }
-    //     });
+    axios.post("/login", {
+      password: formData.password
+    }, {headers: headers})
+        .then((response) => {
+          const name = response.data.data.name;
+          const fullUserId = response.data.data.routingHash + response.data.data.id;
+          const token = response.data.data.password;
+          sessionStorage.setItem('name', name)
+          sessionStorage.setItem('fullUserId', fullUserId)
+          sessionStorage.setItem('token', token);
+          MessagePlugin.success("Welcome! " + name);
+          router.push("/home");
+        });
   } else {
     MessagePlugin.warning("Please make sure the input format is correct!")
   }
