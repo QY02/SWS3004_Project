@@ -35,3 +35,20 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(error);
 });
+
+const fileServerAxios = axios.create({
+    baseURL: 'http://aad092aaf80b94cf998d0facf27d6975-1447862158.us-east-1.elb.amazonaws.com:25670',
+});
+
+fileServerAxios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response) {
+        MessagePlugin.error(error.response.data.msg);
+    } else {
+        MessagePlugin.error(error.message);
+    }
+    return Promise.reject(error);
+});
+
+export { fileServerAxios };

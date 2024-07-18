@@ -28,7 +28,12 @@ const routes = [
                 name: 'publishEvent',
                 path: '/publishEvent',
                 component: () => import('@/components/event/PublishEvent.vue')
-            }
+            },
+            {
+                name: 'home',
+                path: '/home',
+                component: () => import('@/components/home/HomePage.vue')
+            },
         ]
     }
 ];
