@@ -103,7 +103,7 @@ public class UserRoutingHashGenerateController {
             if (key.equalsIgnoreCase("Transfer-Encoding")) {
                 value = value.stream().filter(s -> !s.equalsIgnoreCase("chunked")).collect(Collectors.toList());
             }
-            if (!value.isEmpty()) {
+            if ((!value.isEmpty()) && (!key.equalsIgnoreCase("Access-Control-Allow-Origin"))) {
                 responseHeaders.put(key, value);
             }
         });
