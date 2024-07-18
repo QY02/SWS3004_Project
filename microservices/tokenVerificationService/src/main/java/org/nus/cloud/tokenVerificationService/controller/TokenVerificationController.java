@@ -16,7 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -36,7 +36,7 @@ public class TokenVerificationController {
     @Resource
     private RedisUtil redisUtil;
 
-    @PostMapping("/**")
+    @RequestMapping("/**")
     public Object tokenVerification(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         String token = request.getHeader("token");
         if ((token == null) || (token.isBlank())) {
