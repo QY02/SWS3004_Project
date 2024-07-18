@@ -19,7 +19,20 @@ on aws using Kubernetes.
 
 The architecture of the system can is described in the following graph:
 
-![Architecture Diagram](example.jpg)
+![Architecture Diagram](总框架图.drawio.svg)
+
+#### It can be simply divided into four parts:
+1. Istio Gate Way
+2. User Verification
+   ![UserVerification Diagram](User Verification.drawio.svg)
+
+
+3. Event operations
+   ![EventOperation Diagram](EventOperation.drawio.svg)
+
+
+4. Data Storage
+   ![Data Diagram](Data.drawio.svg)
 
 In our system, the backend is divided into to modules. User module and event module. In user module, their are login,
 register, token verification and order record microservices. In event module, there are event global data, event
