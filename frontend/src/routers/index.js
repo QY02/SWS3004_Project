@@ -32,7 +32,7 @@ const routes = [
             {
                 name: 'home',
                 path: '/home',
-                component: () => import('@/components/home/HomePage.vue')
+                component: () => import('@/components/home/Home.vue')
             },
         ]
     }

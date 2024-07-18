@@ -18,7 +18,8 @@
     "tdesign-vue-next": "^1.9.0",
     "vue": "^3.4.29",
     "vue-draggable-resizable": "^3.0.0",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "element-plus": "^2.6.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

@@ -23,4 +23,6 @@ public class BriefEvent {
     private LocalDateTime publishDatetime;
 
     private String name;
+
+    private String posterUrl;
 }
