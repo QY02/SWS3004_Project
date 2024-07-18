@@ -4,7 +4,8 @@
       <t-aside :width="isSidebarCollapsed ? '64px' : null">
         <t-menu class="side-nav" theme="light" value="home" :collapsed="isSidebarCollapsed">
           <template #logo>
-            <img height="28" src="https://tdesign.gtimg.com/site/baseLogo-light.png" alt="logo"/>
+            <Logo v-if="isSidebarCollapsed"/>
+            <LogoFull v-else/>
           </template>
           <t-menu-item value="home" @click="handleNav('home')">
             <template #icon>
@@ -68,6 +69,8 @@ import {HomeIcon, NotificationIcon, SettingIcon, UserCircleIcon, ViewListIcon} f
 import config from '@/config/style.js';
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import router from '@/routers';
+import Logo from "@/assets/logo.svg";
+import LogoFull from "@/assets/logo-full.svg";
 
 let isSidebarCollapsed = ref(config.isSidebarCollapsed);
 const sidebarElement = ref(null);
