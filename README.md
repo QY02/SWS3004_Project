@@ -19,9 +19,9 @@ Our team has developed a robust cloud-based microservices architecture designed 
 
 Provide a high-level overview of the system architecture. Describe the major components and how they interact with each other.
 
-```
-![Architecture Diagram](System Architecture.jpg)
-```
+
+![Architecture Diagram](example.jpg)
+
 
 ### 1.3 Key Components
 - **Microservices Architecture**: Each service (Register, Login, Booking, Event Publish) is deployed as a microservice
