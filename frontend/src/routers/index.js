@@ -22,7 +22,12 @@ const routes = [
             {
                 name: 'book',
                 path: '/book',
-                component: () => import('@/components/book/Steps.vue')
+                component: () => import('@/components/event/book/Steps.vue')
+            },
+            {
+                name: 'publishEvent',
+                path: '/publishEvent',
+                component: () => import('@/components/event/PublishEvent.vue')
             }
         ]
     }

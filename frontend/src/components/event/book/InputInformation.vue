@@ -22,7 +22,7 @@ import {
   currentStep,
   sessionInformation,
   toNextStep
-} from '@/components/book/Steps.vue';
+} from '@/components/event/book/Steps.vue';
 import {reactive, ref, UnwrapNestedRefs, watch} from "vue";
 import {FormProps, FormRule, MessagePlugin} from "tdesign-vue-next";
 

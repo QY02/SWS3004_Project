@@ -46,10 +46,10 @@
 
 import {onMounted, ref} from "vue";
 import {CheckCircleIcon, TimeIcon, VerifyIcon} from 'tdesign-icons-vue-next';
-import ChooseSession from '@/components/book/ChooseSession.vue';
-import ChooseSeat from '@/components/book/ChooseSeat.vue';
-import InputInformation from '@/components/book/InputInformation.vue';
-import Finish from '@/components/book/Finish.vue';
+import ChooseSession from '@/components/event/book/ChooseSession.vue';
+import ChooseSeat from '@/components/event/book/ChooseSeat.vue';
+import InputInformation from '@/components/event/book/InputInformation.vue';
+import Finish from '@/components/event/book/Finish.vue';
 import {MessagePlugin, NotifyPlugin} from "tdesign-vue-next";
 import {AxiosRequestConfig} from 'axios';
 import {useRoute} from "vue-router";
