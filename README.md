@@ -31,9 +31,12 @@ Provide a high-level overview of the system architecture. Describe the major com
 
 ### 2.1 Prerequisites
 List all the prerequisites needed to set up the environment.
-- **Software 1**: Version and installation link.
-- **Software 2**: Version and installation link.
-- **Library 1**: Version and installation command.
+- Istio
+- Kubernetes Gateway API CRDs
+- go version 1.21
+- OperatorSDK
+
+Please see 2.2 for more information.
 
 ### 2.2 Installation
 Step-by-step guide to setting up the development environment.
