@@ -223,7 +223,7 @@ const FORM_RULES = ref({
   event_time_range: [{required: true, message: 'Event session time is required'}],
   venue: [{required: true, message: 'Venue is required'}],
   seat_map_id: [{
-    required: computed(() => Data.value.seat_required && Data.value.registration_required),
+    required: true,
     message: 'Seat map is required'
   }],
 });

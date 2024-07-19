@@ -13,12 +13,6 @@
             </template>
             Home
           </t-menu-item>
-          <t-menu-item value="book" @click="handleNav('book')">
-            <template #icon>
-              <HomeIcon/>
-            </template>
-            Book
-          </t-menu-item>
         </t-menu>
       </t-aside>
       <t-layout>
@@ -33,19 +27,9 @@
             </template>
             <template #operations>
               <div class="operations-container">
-                <t-tooltip placement="bottom" content="用户信息">
-                  <t-button theme="default" shape="square" variant="text">
+                <t-tooltip placement="bottom" content="Logout">
+                  <t-button theme="default" shape="square" variant="text" @click="logout">
                     <UserCircleIcon class="header-menu-icon"/>
-                  </t-button>
-                </t-tooltip>
-                <t-tooltip placement="bottom" content="通知">
-                  <t-button theme="default" shape="square" variant="text">
-                    <NotificationIcon class="header-menu-icon"/>
-                  </t-button>
-                </t-tooltip>
-                <t-tooltip placement="bottom" content="设置">
-                  <t-button theme="default" shape="square" variant="text">
-                    <SettingIcon class="header-menu-icon"/>
                   </t-button>
                 </t-tooltip>
               </div>
@@ -65,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import {HomeIcon, NotificationIcon, SettingIcon, UserCircleIcon, ViewListIcon} from 'tdesign-icons-vue-next';
+import {HomeIcon, UserCircleIcon, ViewListIcon} from 'tdesign-icons-vue-next';
 import config from '@/config/style.js';
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import router from '@/routers';
@@ -107,12 +91,14 @@ const changeCollapsed = () => {
 const handleNav = (value: string) => {
   switch (value) {
     case 'home':
-      router.push('/');
-      break;
-    case 'book':
-      router.push('/book');
+      router.push('/home');
       break;
   }
+}
+
+const logout = () => {
+  sessionStorage.clear();
+  router.push('/');
 }
 </script>
 

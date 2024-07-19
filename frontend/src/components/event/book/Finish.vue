@@ -4,7 +4,6 @@
       <CheckCircleIcon size="100px" style="color: #009800"/>
       <h1 class="success-prompt-finish">Book success</h1>
       <t-space>
-        <t-button>View order</t-button>
         <t-button @click="router.push('/home')">Back to home</t-button>
       </t-space>
     </t-space>
