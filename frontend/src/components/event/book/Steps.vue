@@ -220,7 +220,6 @@ export let sessionInformation: Session[] = reactive([{
 
 const fullUserId = sessionStorage.getItem('fullUserId')
 const token = sessionStorage.getItem('token')
-const eventDetailedDataLocation = sessionStorage.getItem('eventDetailedDataLocation')
 
 export const submitData = async () => {
   axios.post("/book", {
@@ -236,7 +235,7 @@ export const submitData = async () => {
     headers: {
       fullUserId: fullUserId,
       token: token,
-      eventRoutingIndex: eventDetailedDataLocation
+      eventRoutingIndex: sessionStorage.getItem('eventDetailedDataLocation')
     }
   } as AxiosRequestConfig).then(() => {
     MessagePlugin.success('Submit success');
